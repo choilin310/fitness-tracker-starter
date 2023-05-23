@@ -1,20 +1,33 @@
 {
   "name": "fitness-trakr",
   "version": "1.0.0",
-  "description": "",
+  "description": "- First make sure you create your database locally!   - `createdb fitness-dev`",
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
     "start:dev": "nodemon server.js",
-    "seed": "node db/seed.js"
+    "seed": "node db/seed.js",
+    "seed:dev": "nodemon db/seed.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
     "pg": "^8.11.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/choilin310/fitness-tracker-starter.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/choilin310/fitness-tracker-starter/issues"
+  },
+  "homepage": "https://github.com/choilin310/fitness-tracker-starter#readme"
 }
