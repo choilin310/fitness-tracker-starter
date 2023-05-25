@@ -1,4 +1,5 @@
 const client = require("../client");
+
 async function createUser(userObj) {
   try {
     const {

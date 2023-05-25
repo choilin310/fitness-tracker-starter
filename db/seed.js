@@ -12,6 +12,18 @@ const {
   getUserByUsername,
   getUser,
 } = require("./adapters/users");
+const {
+  createRoutine,
+  getAllRoutines,
+  getRoutineById,
+} = require("./adapters/routines");
+const {
+  createActivity,
+  getActivityById,
+  getAllActivities,
+  updateActivity,
+} = require("./adapters/activities.js");
+
 async function dropTables() {
   // Drop all tables in order
   try {
@@ -47,11 +59,20 @@ async function createTables() {
     await client.query(`
       CREATE TABLE routines (
         id SERIAL PRIMARY KEY,
-        creater_id INTEGER REFERENCES users(id),
-        is_public BOOLEAN DEFAULT false,
+        creator_id INTEGER REFERENCES users(id),
         name VARCHAR(255) UNIQUE NOT NULL,
-        goal TEXT NOT NULL
-      )`);
+        goal TEXT NOT NULL,
+        is_public BOOLEAN DEFAULT false
+      );
+      `);
+
+    await client.query(`
+      CREATE TABLE  activities(
+        id SERIAL PRIMARY KEY,
+        name varchar(255) UNIQUE NOT NULL,
+        description text NOT NULL
+      );
+    `);
 
     console.log("Finished building tables!");
   } catch (error) {
@@ -63,14 +84,24 @@ async function createTables() {
 async function populateTables() {
   // Seed tables with dummy data from seedData.js
   const populateUsers = users.map(async (user) => await createUser(user));
+  const populateRoutines = routines.map(
+    async (routine) =>
+      await createRoutine(routine.creator_id, routine.name, routine.goal)
+  );
+  const populateActivities = activities.map(
+    async (act) => await createActivity(act)
+  );
 }
 
 async function rebuildDb() {
-  client.connect();
   try {
+    client.connect();
+
     await dropTables();
     await createTables();
     await populateTables();
+    //USERS...
+    console.log("---------------Users----------------");
     console.log("Calling getAllUsers");
     const users = await getAllUsers();
     console.log("Result:", users);
@@ -86,6 +117,30 @@ async function rebuildDb() {
     console.log("Calling getuser with hanz");
     const result3 = await getUser("hanz", "test3");
     console.log("Result:", result3);
+
+    //ROUTINES..
+    console.log("---------------Routines-----------------");
+    console.log("Calling getAllRoutines");
+    const routines = await getAllRoutines();
+    console.log("Routines: ", routines);
+
+    console.log("Calling getRoutineById of 1");
+    const routine1 = await getRoutineById(1);
+    console.log("Routine 1: ", routine1);
+
+    //Activities..
+    console.log("////////////////// tetsting Activities///////////////////");
+    console.log("Calling getAllActivities");
+    const activities = await getAllActivities();
+    console.log("Result:", activities);
+
+    console.log("Calling getActivityById with 1");
+    const result4 = await getActivityById(1);
+    console.log("Result:", result4);
+
+    console.log("Calling UpdateActivity");
+    const result5 = await updateActivity(1, "armwrestle", "test your might");
+    console.log("Result:", result5);
   } catch (error) {
     console.error(error);
   } finally {
