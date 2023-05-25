@@ -13,7 +13,21 @@ const users = [
         password: 'test3'
     }
 ];
-const activities = [];
+const activities = [
+    {
+        name: 'benchpress',
+        description: 'lift a safe amount, but push yourself!'
+    },
+    {
+        name: 'curls',
+        description: 'work those biceps!'
+    },
+    {
+        name: 'pushups',
+        description: 'are you pushing yourself up or pushing the earth down?'
+    },
+
+];
 const routines = [];
 const routine_activities = [];
 
