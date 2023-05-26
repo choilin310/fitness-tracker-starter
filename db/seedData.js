@@ -35,7 +35,31 @@ const routines = [
     name: "Chest Day",
     goal: "Get Buff!",
   },
+  {
+    creator_id: 2,
+    name: "Leg Day",
+    goal: "Every Day Leg Day!!",
+  },
 ];
-const routine_activities = [];
+const routine_activities = [
+  {
+    routine_id: 1,
+    activity_id: 1,
+    count: 4,
+    duration: 20,
+  },
+  {
+    routine_id: 1,
+    activity_id: 2,
+    count: 8,
+    duration: 15,
+  },
+  {
+    routine_id: 1,
+    activity_id: 3,
+    count: 4,
+    duration: 15,
+  },
+];
 
 module.exports = { users, activities, routines, routine_activities };

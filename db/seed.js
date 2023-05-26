@@ -23,6 +23,10 @@ const {
   getAllActivities,
   updateActivity,
 } = require("./adapters/activities.js");
+const {
+  getRoutineActivityById,
+  addActivityToRoutine,
+} = require("./adapters/routine_activities");
 
 async function dropTables() {
   // Drop all tables in order
@@ -59,18 +63,28 @@ async function createTables() {
     await client.query(`
       CREATE TABLE routines (
         id SERIAL PRIMARY KEY,
-        creator_id INTEGER REFERENCES users(id),
+        "creator_id" INTEGER REFERENCES users(id),
         name VARCHAR(255) UNIQUE NOT NULL,
         goal TEXT NOT NULL,
         is_public BOOLEAN DEFAULT false
       );
-      `);
+    `);
 
     await client.query(`
       CREATE TABLE  activities(
         id SERIAL PRIMARY KEY,
         name varchar(255) UNIQUE NOT NULL,
         description text NOT NULL
+      );
+    `);
+
+    await client.query(`
+      CREATE TABLE routine_activities (
+        id SERIAL PRIMARY KEY,
+        "routine_id" INTEGER REFERENCES routines(id),
+        "activity_id" INTEGER REFERENCES activities(id),
+        duration INTEGER,
+        count INTEGER
       );
     `);
 
@@ -90,6 +104,15 @@ async function populateTables() {
   );
   const populateActivities = activities.map(
     async (act) => await createActivity(act)
+  );
+  const populateRoutineActivities = routine_activities.map(
+    async (ra) =>
+      await addActivityToRoutine(
+        ra.routine_id,
+        ra.activity_id,
+        ra.count,
+        ra.duration
+      )
   );
 }
 
@@ -124,8 +147,8 @@ async function rebuildDb() {
     const routines = await getAllRoutines();
     console.log("Routines: ", routines);
 
-    console.log("Calling getRoutineById of 1");
-    const routine1 = await getRoutineById(1);
+    console.log("Calling getRoutineById of 2");
+    const routine1 = await getRoutineById(2);
     console.log("Routine 1: ", routine1);
 
     //Activities..
@@ -141,6 +164,12 @@ async function rebuildDb() {
     console.log("Calling UpdateActivity");
     const result5 = await updateActivity(1, "armwrestle", "test your might");
     console.log("Result:", result5);
+
+    //Routine_Activities......
+    console.log("------------Routine_Activities-------------");
+    console.log("Get Routine_Activity By Id 1");
+    const routine_activity_1 = await getRoutineActivityById(1);
+    console.log("Routine_activity_1: ", routine_activity_1);
   } catch (error) {
     console.error(error);
   } finally {

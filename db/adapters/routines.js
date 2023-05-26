@@ -8,7 +8,7 @@ async function createRoutine(creator_id, name, goal) {
       rows: [routine],
     } = await client.query(
       `
-            INSERT INTO routines(creator_id, name, goal )
+            INSERT INTO routines("creator_id", name, goal )
             VALUES($1, $2, $3)
             RETURNING *;
             `,
@@ -27,15 +27,16 @@ async function createRoutine(creator_id, name, goal) {
 
 async function getAllRoutines() {
   try {
-    const { rows: routineIds } = await client.query(`
-            SELECT creator_id, name, goal
+    const { rows: routines } = await client.query(`
+            SELECT "creator_id", name, goal
             FROM routines;
         `);
-    console.log("Routine Id's: ", routineIds);
-    //const routines = await Promise.all(
-    //routineIds.map((routine) => getRoutineById(routine.id))
-    //);
-    return routineIds;
+    console.log("Routines in routines.js: ", routines);
+    /*const routines = await Promise.all(
+      routineIds.map((routine) => getRoutineById(routine.id))
+    );
+    console.log("-------Routines", routines);*/
+    return routines;
   } catch (error) {
     throw error;
   }
@@ -47,10 +48,10 @@ async function getRoutineById(routineId) {
       rows: [routine],
     } = await client.query(
       `
-            SELECT * 
-            FROM routines
-            WHERE id=$1;
-            `,
+        SELECT * 
+        FROM routines
+        WHERE id=$1;
+        `,
       [routineId]
     );
 
