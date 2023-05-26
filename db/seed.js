@@ -15,6 +15,8 @@ async function dropTables() {
     // have to make sure to drop in correct order
     await client.query(`
       DROP TABLE IF EXISTS users;
+      DROP TABLE IF EXISTS routines;
+      DROP TABLE IF EXISTS routine_activities;
       DROP TABLE IF EXISTS activities;
     `);
 
@@ -38,6 +40,12 @@ async function createTables() {
         password varchar(255) NOT NULL
       );
     `);
+   
+    await client.quarry(`
+        CREATE TABLE routines(
+
+        );
+    `);
 
     await client.query(`
       CREATE TABLE  activities(
@@ -45,6 +53,16 @@ async function createTables() {
         name varchar(255) UNIQUE NOT NULL,
         description text NOT NULL
       );
+    `);
+
+    await client.query(`
+        CREATE TABLE routine_activities(
+          id SERIAL PRIMARY KEY,
+          routine_id INTEGER REFERENCES routines(id),
+          activities_id INTEGER REFERENCES activities(id),
+          duration INTEGER,
+          count INTEGER
+        );
     `);
 
     
@@ -95,6 +113,7 @@ async function rebuildDb() {
     console.log("Calling UpdateActivity");
     const result5 = await updateActivity(1,"armwrestle","test your might");
     console.log("Result:", result5);
+    console.log("/////////////////////testing Routine_Activities////////////")
 
   } catch (error) {
     console.error(error);
