@@ -66,6 +66,12 @@ async function createTables() {
       );
     `);
 
+    await client.quarry(`
+        CREATE TABLE routines(
+
+        );
+    `);
+
     await client.query(`
       CREATE TABLE routines (
         id SERIAL PRIMARY KEY,
@@ -160,6 +166,7 @@ async function rebuildDb() {
     console.log("Calling UpdateActivity");
     const result5 = await updateActivity(1, "armwrestle", "test your might");
     console.log("Result:", result5);
+    console.log("/////////////////////testing Routine_Activities////////////");
 
     //Routine_Activities......
     console.log("------------Routine_Activities-------------");
