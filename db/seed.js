@@ -13,9 +13,10 @@ const {
   getUser,
 } = require("./adapters/users");
 const {
-  createRoutine,
-  getAllRoutines,
   getRoutineById,
+  getRoutinesWithoutActivities,
+  getAllRoutines,
+  createRoutine,
 } = require("./adapters/routines");
 const {
   createActivity,
@@ -34,10 +35,10 @@ async function dropTables() {
     console.log("Starting to drop tables...");
 
     await client.query(`
-      DROP TABLE IF EXISTS routine_activities;
-      DROP TABLE IF EXISTS activities;
-      DROP TABLE IF EXISTS routines;
-      DROP TABLE IF EXISTS users;
+    DROP TABLE IF EXISTS routine_activities;
+    DROP TABLE IF EXISTS activities;
+    DROP TABLE IF EXISTS routines;
+    DROP TABLE IF EXISTS users;
     `);
 
     console.log("Finished dropping tables!");
@@ -141,16 +142,6 @@ async function rebuildDb() {
     const result3 = await getUser("hanz", "test3");
     console.log("Result:", result3);
 
-    //ROUTINES..
-    console.log("---------------Routines-----------------");
-    console.log("Calling getAllRoutines");
-    const routines = await getAllRoutines();
-    console.log("Routines: ", routines);
-
-    console.log("Calling getRoutineById of 2");
-    const routine1 = await getRoutineById(2);
-    console.log("Routine 1: ", routine1);
-
     //Activities..
     console.log("////////////////// tetsting Activities///////////////////");
     console.log("Calling getAllActivities");
@@ -170,6 +161,20 @@ async function rebuildDb() {
     console.log("Get Routine_Activity By Id 1");
     const routine_activity_1 = await getRoutineActivityById(1);
     console.log("Routine_activity_1: ", routine_activity_1);
+
+    //ROUTINES..
+    console.log("---------------Routines-----------------");
+    console.log("Calling getAllRoutines");
+    const routines = await getAllRoutines();
+    console.log("Routines: ", routines);
+
+    console.log("Calling getRoutinesWithoutActivities");
+    const routines_No_Activities = await getRoutinesWithoutActivities();
+    console.log("Routines Without Activities: ", routines_No_Activities);
+
+    console.log("Calling getRoutineById of 1");
+    const routine1 = await getRoutineById(1);
+    console.log("Routine 1: ", routine1);
   } catch (error) {
     console.error(error);
   } finally {
