@@ -16,7 +16,11 @@ const {
   getRoutineById,
   getRoutinesWithoutActivities,
   getAllRoutines,
+  getAllPublicRoutines,
+  getAllRoutinesByUser,
+  getPublicRoutinesByActivity,
   createRoutine,
+  updateRoutine,
 } = require("./adapters/routines");
 const {
   createActivity,
@@ -164,17 +168,46 @@ async function rebuildDb() {
 
     //ROUTINES..
     console.log("---------------Routines-----------------");
-    console.log("Calling getAllRoutines");
-    const routines = await getAllRoutines();
-    console.log("Routines: ", routines);
+    console.log("Calling getRoutineById of 1");
+    const routine1 = await getRoutineById(1);
+    console.log("Routine 1: ", routine1);
 
     console.log("Calling getRoutinesWithoutActivities");
     const routines_No_Activities = await getRoutinesWithoutActivities();
     console.log("Routines Without Activities: ", routines_No_Activities);
 
-    console.log("Calling getRoutineById of 1");
-    const routine1 = await getRoutineById(1);
-    console.log("Routine 1: ", routine1);
+    console.log("Calling getAllRoutines");
+    const routines = await getAllRoutines();
+    console.log("Routines: ", routines);
+
+    console.log("Calling getPublicRoutines");
+    const publicRoutines = await getAllPublicRoutines();
+    console.log("publicRoutines: ", publicRoutines);
+
+    console.log("Calling getAllRoutinesByUser");
+    const allRoutinesByUser = await getAllRoutinesByUser("cedric");
+    console.log("AllUserRoutines: ", allRoutinesByUser);
+
+    console.log("Calling getPublicRoutinesByActivity of 2");
+    const PublicRoutinesByActivity = await getPublicRoutinesByActivity(2);
+    console.log("Public Routines By Activity: ", PublicRoutinesByActivity);
+
+    console.log("Creating a Routine");
+    const createdRoutine = await createRoutine(
+      3,
+      "Cardio Day",
+      "Kill Me Now!!"
+    );
+    console.log("Created Routine: ", createdRoutine);
+
+    console.log("Calling Update Routine");
+    const updatedRoutine = await updateRoutine(
+      2,
+      "Cheat Day",
+      "Eat food",
+      true
+    );
+    console.log("updatedRoutine: ", updatedRoutine);
   } catch (error) {
     console.error(error);
   } finally {

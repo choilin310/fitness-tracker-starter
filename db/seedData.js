@@ -36,7 +36,7 @@ const routines = [
     goal: "Get Buff!",
   },
   {
-    creator_id: 2,
+    creator_id: 1,
     name: "Leg Day",
     goal: "Every Day Leg Day!!",
   },

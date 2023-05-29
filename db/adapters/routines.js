@@ -88,7 +88,7 @@ async function getAllRoutines() {
 
     const { rows: routines } = await client.query(
       `
-            SELECT DISTINCT rts.id, rts."creator_id", rts.name, rts.goal, (
+            SELECT DISTINCT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, (
                 SELECT ARRAY_AGG(acts.name ORDER BY acts.id)
                 FROM activities acts
                     INNER JOIN routine_activities ract
@@ -100,8 +100,78 @@ async function getAllRoutines() {
             `
     );
 
-    console.log("-----------routines----------in get all routines", routines);
+    return routines;
+  } catch (error) {
+    throw error;
+  }
+}
 
+async function getAllPublicRoutines() {
+  try {
+    const { rows: routines } = await client.query(
+      `
+                SELECT DISTINCT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, (
+                    SELECT ARRAY_AGG(acts.name ORDER BY acts.id)
+                    FROM activities acts
+                        INNER JOIN routine_activities ract
+                            ON acts.id = ract."activity_id"
+                    WHERE rts.id = ract."routine_id"
+                    )
+                    as activities
+                FROM routines rts
+                WHERE rts.is_public = true;
+                `
+    );
+    return routines;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getAllRoutinesByUser(username) {
+  try {
+    const { rows: routines } = await client.query(
+      `
+            SELECT DISTINCT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, (
+                SELECT ARRAY_AGG(acts.name ORDER BY acts.id)
+                    FROM activities acts
+                        INNER JOIN routine_activities ract
+                            ON acts.id = ract."activity_id"
+                    WHERE rts.id = ract."routine_id"
+            )
+            as activities
+            FROM routines rts
+            INNER JOIN users us
+                ON us.id = rts."creator_id"
+            WHERE us.username = $1;
+            `,
+      [username]
+    );
+    return routines;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getPublicRoutinesByActivity(activityId) {
+  try {
+    const { rows: routines } = await client.query(
+      `
+            SELECT DISTINCT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, (
+                SELECT ARRAY_AGG(acts.name ORDER BY acts.id)
+                    FROM activities acts
+                        INNER JOIN routine_activities ract
+                            ON acts.id = ract."activity_id"
+                    WHERE rts.id = ract."routine_id"
+            )
+            as activities
+            FROM routines rts
+                INNER JOIN routine_activities ract
+                    ON ract."routine_id"=rts.id
+            WHERE (rts.is_public = true) AND (ract."activity_id"=$1); 
+            `,
+      [activityId]
+    );
     return routines;
   } catch (error) {
     throw error;
@@ -127,9 +197,47 @@ async function createRoutine(creator_id, name, goal) {
   }
 }
 
+async function updateRoutine(routineId, name, goal, isPublic) {
+  try {
+    const {
+      rows: [routine],
+    } = await client.query(
+      `
+                  UPDATE routines 
+                  SET name = $2, goal =$3,
+                  is_public = $4
+                  WHERE id = $1
+                  RETURNING *;
+              `,
+      [routineId, name, goal, isPublic]
+    );
+    return routine;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function destroyRoutine(routineId) {
+  try {
+    const {
+      row: [routine],
+    } = await client.query(
+      `
+            
+            `
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
-  createRoutine,
-  getRoutinesWithoutActivities,
-  getAllRoutines,
   getRoutineById,
+  getAllRoutines,
+  getRoutinesWithoutActivities,
+  getAllPublicRoutines,
+  getAllRoutinesByUser,
+  getPublicRoutinesByActivity,
+  createRoutine,
+  updateRoutine,
 };
