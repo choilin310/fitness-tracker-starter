@@ -7,4 +7,14 @@ const {
   getRoutineById,
   updateRoutines,
   getRoutineByRoutineName,
-} = require("../db/adapters");
+} = require("../db/adapters/routines.js");
+
+
+
+
+
+
+
+
+
+module.exports = routinesRouter;

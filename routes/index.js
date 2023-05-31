@@ -1,6 +1,11 @@
-const router = require("express").Router();
+const apiRouter = require("express").Router();
+const userRouter = require("./users.js");
+const rnaRouter = require("./routine_activities.js");
+const activitiesRouter = require("./activities.js");
+const routinesRouter = require("./routines.js");
 
-router.get("/health", (req, res, next) => {
+//HEALTH ROUTE
+apiRouter.get("/health", (req, res, next) => {
   try {
     res.send("API is Healthy 😎!");
   } catch (error) {
@@ -9,5 +14,5 @@ router.get("/health", (req, res, next) => {
 });
 
 // Hook up other Routers ex: router.use('/users', require('./users'))
-
-module.exports = router;
+apiRouter.use("/users", userRouter);
+module.exports = apiRouter;
