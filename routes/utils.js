@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const jwt = require("jsonwebtoken");
 
 function requireUser(req, res, next) {
@@ -26,3 +27,20 @@ const authRequired = (req, res, next) => {
 };
 
 module.exports = { requireUser, authRequired };
+=======
+function requireUser(req, res, next) {
+
+    if (!req.user) {
+      next({
+        name: "MissingUserError",
+        message: "You must be logged in to perform this action"
+      });
+    }
+  
+    next();
+  }
+  
+  module.exports = {
+    requireUser
+  }
+>>>>>>> 12b05e9 (routes wip fixed client and query)

@@ -3,6 +3,7 @@ const { requireUser, authRequired } = require(`./utils`);
 
 const {
   getRoutineById,
+<<<<<<< HEAD
   getRoutinesWithoutActivities,
   getAllRoutines,
   getAllPublicRoutines,
@@ -159,3 +160,18 @@ routinesRouter.delete("/:routine_id", authRequired, async (req, res, next) => {
 });
 
 module.exports = routinesRouter;
+=======
+  updateRoutines,
+  getRoutineByRoutineName,
+} = require("../db/adapters/routines.js");
+
+
+
+
+
+
+
+
+
+module.exports = routinesRouter;
+>>>>>>> 12b05e9 (routes wip fixed client and query)

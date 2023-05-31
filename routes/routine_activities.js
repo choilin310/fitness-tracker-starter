@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const ractsRouter = require("express").Router();
 const {
   addActivityToRoutine,
@@ -127,3 +128,15 @@ ractsRouter.delete(
 );
 
 module.exports = ractsRouter;
+=======
+const express = require("express");
+const rnaRouter = express.Router();
+
+
+
+
+
+
+
+module.exports = rnaRouter;
+>>>>>>> 12b05e9 (routes wip fixed client and query)

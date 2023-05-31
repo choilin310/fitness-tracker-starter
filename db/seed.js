@@ -1,4 +1,4 @@
-const client = require("./client");
+const {client} = require("/home/cxb94/dev/FitnessTrackerBackend/db/client.js");
 const {
   users,
   activities,

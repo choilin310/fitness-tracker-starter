@@ -1,5 +1,5 @@
-const client = require("../client");
-const { createActivity, getAllActivities } = require("./activities");
+const {client} = require("/home/cxb94/dev/FitnessTrackerBackend/db/client.js");
+const { createActivity, getAllActivities } = require("./activities.js");
 
 async function createRoutine(creator_id, name, goal, is_public = true) {
   try {
