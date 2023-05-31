@@ -5,6 +5,8 @@ const express = require("express");
 const morgan = require("morgan");
 const {apiRouter} = require("./routes");
 const PORT = 3000;
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const {client} = require("./db/client.js");
 
 const app = express();
@@ -12,6 +14,9 @@ const app = express();
 // Middleware
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(cors());
+app.use(cookieParser(process.env.COOKIE_SECRET));
+
 
 // Routes
 app.use("/api", require("./routes"));
