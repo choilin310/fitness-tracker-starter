@@ -82,7 +82,7 @@ async function getUserByUsername(username) {
       rows: [user],
     } = await client.query(
       `
-        SELECT id, username from users WHERE username=$1;
+        SELECT * from users WHERE username=$1;
         `,
       [username]
     );

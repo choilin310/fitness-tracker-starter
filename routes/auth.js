@@ -2,7 +2,11 @@ const authRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
 const SALT_ROUNDS = 10;
 const bcrypt = require("bcrypt");
-const { createUser, getUserByUsername } = require("../db/adapters/users");
+const {
+  createUser,
+  getUserByUsername,
+  getUser,
+} = require("../db/adapters/users");
 
 //POST /api/auth/register
 
@@ -38,7 +42,44 @@ authRouter.post("/register", async (req, res, next) => {
 });
 
 authRouter.post("/login", async (req, res, next) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    next({
+      name: "MissingCredentialsError",
+      message: "Please supply both a username and password",
+    });
+  }
+
   try {
+    const user = await getUserByUsername(username);
+    bcrypt.compare(password, user.password, function (err, result) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      if (result) {
+        console.log("password correct");
+        const token = jwt.sign(user, process.env.JWT_SECRET);
+
+        res.cookie("token", token, {
+          sameSite: "strict",
+          httpOnly: true,
+          signed: true,
+        });
+
+        res.send({
+          success: true,
+          message: "You're logged in!",
+        });
+      } else {
+        next({
+          name: "IncorrectCredentialsError",
+          message: "Username or password is incorrect",
+        });
+      }
+    });
+    console.log(user);
   } catch (error) {
     next(error);
   }

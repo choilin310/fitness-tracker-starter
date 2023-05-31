@@ -179,10 +179,6 @@ async function rebuildDb() {
     );
     console.log("Created Routine: ", createdRoutine);
 
-    console.log("Destroying Routine");
-    const destroyedRoutine = await destroyRoutine(3);
-    console.log("Destroyed Routine: ", destroyedRoutine);
-
     console.log("Calling getRoutineById of 1");
     const routine1 = await getRoutineById(1);
     console.log("Routine 1: ", routine1);
@@ -215,6 +211,10 @@ async function rebuildDb() {
       true
     );
     console.log("updatedRoutine: ", updatedRoutine);
+
+    console.log("Destroying Routine");
+    const destroyedRoutine = await destroyRoutine(3);
+    console.log("Destroyed Routine: ", destroyedRoutine);
   } catch (error) {
     console.error(error);
   } finally {
