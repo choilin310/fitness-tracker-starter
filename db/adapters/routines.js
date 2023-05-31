@@ -72,32 +72,27 @@ async function getRoutinesWithoutActivities() {
 
 async function getAllRoutines() {
   try {
-    /*const { rows: routines } = await client.query(
-      `
-          SELECT DISTINCT rts.id, rts."creator_id", rts.name, rts.goal, (
-              SELECT ARRAY_AGG(acts.name)
-              FROM activities acts
-                  INNER JOIN routine_activities ract
-                      ON acts.id = ract."activity_id"
-              WHERE rts.id = ract."routine_id"
-              )
-              as activities
-          FROM routines rts;
-          `
-    );*/
-
     const { rows: routines } = await client.query(
       `
-            SELECT DISTINCT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, (
-                SELECT ARRAY_AGG(acts.name ORDER BY acts.id)
-                FROM activities acts
-                    INNER JOIN routine_activities ract
-                        ON acts.id = ract."activity_id"
-                WHERE rts.id = ract."routine_id"
-                )
-                as activities
-            FROM routines rts;
-            `
+            SELECT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, 
+            CASE WHEN ract."routine_id" IS NULL THEN '[]'::json
+            ELSE
+            JSON_AGG(
+              JSON_BUILD_OBJECT (
+                'id', acts.id,
+                'name', acts.name,
+                'description', acts.description,
+                'duration', ract.duration,
+                'count', ract.count
+              )
+            ) END AS activities
+            FROM routines rts
+            FULL OUTER JOIN routine_activities ract
+              ON rts.id = ract."routine_id"
+            FULL OUTER JOIN activities acts
+              ON ract."activity_id" = acts.id
+            GROUP BY rts.id, ract."routine_id"
+      `
     );
 
     return routines;
@@ -110,17 +105,26 @@ async function getAllPublicRoutines() {
   try {
     const { rows: routines } = await client.query(
       `
-                SELECT DISTINCT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, (
-                    SELECT ARRAY_AGG(acts.name ORDER BY acts.id)
-                    FROM activities acts
-                        INNER JOIN routine_activities ract
-                            ON acts.id = ract."activity_id"
-                    WHERE rts.id = ract."routine_id"
-                    )
-                    as activities
-                FROM routines rts
-                WHERE rts.is_public = true;
-                `
+            SELECT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, 
+            CASE WHEN ract."routine_id" IS NULL THEN '[]'::json
+            ELSE
+            JSON_AGG(
+              JSON_BUILD_OBJECT (
+                'id', acts.id,
+                'name', acts.name,
+                'description', acts.description,
+                'duration', ract.duration,
+                'count', ract.count
+              )
+            ) END AS activities
+            FROM routines rts
+            FULL OUTER JOIN routine_activities ract
+              ON rts.id = ract."routine_id"
+            FULL OUTER JOIN activities acts
+              ON ract."activity_id" = acts.id
+            WHERE rts.is_public = true
+            GROUP BY rts.id, ract."routine_id"
+      `
     );
     return routines;
   } catch (error) {
@@ -132,19 +136,28 @@ async function getAllRoutinesByUser(username) {
   try {
     const { rows: routines } = await client.query(
       `
-            SELECT DISTINCT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, (
-                SELECT ARRAY_AGG(acts.name ORDER BY acts.id)
-                    FROM activities acts
-                        INNER JOIN routine_activities ract
-                            ON acts.id = ract."activity_id"
-                    WHERE rts.id = ract."routine_id"
-            )
-            as activities
+            SELECT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, 
+            CASE WHEN ract."routine_id" IS NULL THEN '[]'::json
+            ELSE
+            JSON_AGG(
+              JSON_BUILD_OBJECT (
+                'id', acts.id,
+                'name', acts.name,
+                'description', acts.description,
+                'duration', ract.duration,
+                'count', ract.count
+              )
+            ) END AS activities
             FROM routines rts
-            INNER JOIN users us
+            FULL OUTER JOIN routine_activities ract
+              ON rts.id = ract."routine_id"
+            FULL OUTER JOIN activities acts
+              ON ract."activity_id" = acts.id
+            JOIN users us
                 ON us.id = rts."creator_id"
-            WHERE us.username = $1;
-            `,
+            WHERE us.username = $1
+            GROUP BY rts.id, ract."routine_id"
+      `,
       [username]
     );
     return routines;
@@ -157,21 +170,29 @@ async function getPublicRoutinesByActivity(activityId) {
   try {
     const { rows: routines } = await client.query(
       `
-            SELECT DISTINCT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, (
-                SELECT ARRAY_AGG(acts.name ORDER BY acts.id)
-                    FROM activities acts
-                        INNER JOIN routine_activities ract
-                            ON acts.id = ract."activity_id"
-                    WHERE rts.id = ract."routine_id"
-            )
-            as activities
+            SELECT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, 
+            CASE WHEN ract."routine_id" IS NULL THEN '[]'::json
+            ELSE
+            JSON_AGG(
+              JSON_BUILD_OBJECT (
+                'id', acts.id,
+                'name', acts.name,
+                'description', acts.description,
+                'duration', ract.duration,
+                'count', ract.count
+              )
+            ) END AS activities
             FROM routines rts
-                INNER JOIN routine_activities ract
-                    ON ract."routine_id"=rts.id
-            WHERE (rts.is_public = true) AND (ract."activity_id"=$1); 
-            `,
+            JOIN routine_activities ract
+              ON rts.id = ract."routine_id"
+            JOIN activities acts
+              ON ract."activity_id" = acts.id
+            WHERE (rts.is_public = true) AND (ract."activity_id"=$1)
+            GROUP BY rts.id, ract."routine_id"
+      `,
       [activityId]
     );
+
     return routines;
   } catch (error) {
     throw error;
@@ -219,12 +240,22 @@ async function updateRoutine(routineId, name, goal, isPublic) {
 
 async function destroyRoutine(routineId) {
   try {
-    const {
-      row: [routine],
-    } = await client.query(
+    const { rows: routine_activity } = await client.query(
       `
-            
-            `
+        DELETE
+        FROM routine_activities
+        WHERE "routine_id" = $1;
+        `,
+      [routineId]
+    );
+
+    const { row: routine } = await client.query(
+      `
+        DELETE 
+        FROM routines
+        WHERE id = $1;
+        `,
+      [routineId]
     );
   } catch (error) {
     throw error;
@@ -240,4 +271,5 @@ module.exports = {
   getPublicRoutinesByActivity,
   createRoutine,
   updateRoutine,
+  destroyRoutine,
 };
