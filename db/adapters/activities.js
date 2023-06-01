@@ -7,7 +7,7 @@ async function getActivityById(activityId) {
     const {
       rows: [activity],
     } = await client.query(`
-        SELECT name from activities WHERE id=${activityId}
+        SELECT * from activities WHERE id=${activityId}
         `);
     if (!activity) {
       return null;

@@ -1,7 +1,7 @@
 const routinesRouter = require("express").Router();
 const { requireUser } = require(`./utils`);
 
-/*const {
+const {
   getRoutineById,
   getRoutinesWithoutActivities,
   getAllRoutines,
@@ -12,7 +12,12 @@ const { requireUser } = require(`./utils`);
   createRoutine,
   updateRoutine,
   destroyRoutine,
-} = require("./db/adapters");
+} = require("../db/adapters/routines");
+
+routinesRouter.use((req, res, next) => {
+  console.log("A request is being made to /routines");
+  next();
+});
 
 routinesRouter.get("/", async (req, res, next) => {
   try {
@@ -126,6 +131,5 @@ routinesRouter.delete("/:routine_id", requireUser, async (req, res, next) => {
     next({ name, message });
   }
 });
-*/
 
 module.exports = routinesRouter;
