@@ -60,13 +60,6 @@ authRouter.post("/login", async (req, res, next) => {
       }
       if (result) {
         console.log("password correct");
-        const token = jwt.sign(user, process.env.JWT_SECRET);
-
-        res.cookie("token", token, {
-          sameSite: "strict",
-          httpOnly: true,
-          signed: true,
-        });
 
         res.send({
           success: true,

@@ -19,6 +19,7 @@ routinesRouter.use((req, res, next) => {
   next();
 });
 
+// GET /routines
 routinesRouter.get("/", async (req, res, next) => {
   try {
     const allRoutines = await getAllRoutines();
@@ -32,6 +33,7 @@ routinesRouter.get("/", async (req, res, next) => {
   }
 });
 
+// POST /routines
 routinesRouter.post("/", requireUser, async (req, res, next) => {
   const { name, goal, activities = "" } = req.body;
   const { creator_id } = req.user;
@@ -62,7 +64,8 @@ routinesRouter.post("/", requireUser, async (req, res, next) => {
   }
 });
 
-routinesRouter.patch("/:routineId", requireUser, async (req, res, next) => {
+// PATCH /routines/:routineId
+routinesRouter.patch("/:routine_id", requireUser, async (req, res, next) => {
   const { routine_id } = req.params;
   const { name, goal, activities, is_public } = req.body;
 
@@ -106,6 +109,7 @@ routinesRouter.patch("/:routineId", requireUser, async (req, res, next) => {
   }
 });
 
+// DELETE /routines/:routine_id
 routinesRouter.delete("/:routine_id", requireUser, async (req, res, next) => {
   try {
     const routine = await getRoutineById(req.params.routine_id);

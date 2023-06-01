@@ -13,7 +13,7 @@ function requireUser(req, res, next) {
 const authRequired = (req, res, next) => {
   try {
     const token = req.signedcookies.token;
-    jwt.verify(token, process.env.JWT_SECRET);
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
     res.status(401).send({
       loggedIn: "logged in",
       message: "message",
