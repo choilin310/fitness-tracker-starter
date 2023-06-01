@@ -1,6 +1,7 @@
 const usersRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
 const { getAllUsers } = require("../db/adapters/users");
+const { getAllRoutinesByUser } = require("../db/adapters/routines");
 
 // Making request
 usersRouter.use((req, res, next) => {
@@ -18,25 +19,20 @@ usersRouter.get("/", async (req, res, next) => {
   }
 });
 
-/*usersRouter.post("/register", async (req, res, next) => {
-  const { username, password } = req.body;
-
+//GET /api/users/:username/routines
+// get a list of public routines for a particular user
+usersRouter.get("/:username/routines", async (req, res, next) => {
+  const { username } = req.params;
   try {
-    const _user = await getUserByUsername(username);
-
-    if (_user) {
-      next({
-        name: "UsernameAlreadyExistsError",
-        message: "A user by that username already exists",
-      });
+    const routines = await getAllRoutinesByUser(username);
+    if (routines && routines.is_public) {
+      res.send({ routines: routines });
+    } else {
+      next({ name: "NoRoutinesError", message: "No Routines Found" });
     }
-    const user = await createUser({
-      username,
-      password,
-    });
-  } catch (error) {
-    throw error;
+  } catch ({ name, message }) {
+    next({ name, message });
   }
-});*/
+});
 
 module.exports = usersRouter;

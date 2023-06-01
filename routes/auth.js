@@ -7,9 +7,9 @@ const {
   getUserByUsername,
   getUser,
 } = require("../db/adapters/users");
+const { authRequired } = require("./utils");
 
 //POST /api/auth/register
-
 authRouter.post("/register", async (req, res, next) => {
   try {
     const { username, password } = req.body;
@@ -41,6 +41,7 @@ authRouter.post("/register", async (req, res, next) => {
   }
 });
 
+// POST api/auth/login
 authRouter.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
 
@@ -61,6 +62,14 @@ authRouter.post("/login", async (req, res, next) => {
       if (result) {
         console.log("password correct");
 
+        const token = jwt.sign(user, process.env.JWT_SECRET);
+
+        res.cookie("token", token, {
+          sameSite: "strict",
+          httpOnly: true,
+          signed: true,
+        });
+
         res.send({
           success: true,
           message: "You're logged in!",
@@ -78,6 +87,7 @@ authRouter.post("/login", async (req, res, next) => {
   }
 });
 
+// GET api/auth/logout
 authRouter.get("/logout", async (req, res, next) => {
   try {
     res.clearCookie("token", {
@@ -92,6 +102,11 @@ authRouter.get("/logout", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+// GET api/users/me
+authRouter.get("/me", authRequired, (req, res, next) => {
+  res.send(req.user);
 });
 
 module.exports = authRouter;
