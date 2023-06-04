@@ -1,12 +1,8 @@
 const authRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
-const SALT_ROUNDS = 10;
 const bcrypt = require("bcrypt");
-const {
-  createUser,
-  getUserByUsername,
-  getUser,
-} = require("../db/adapters/users");
+const SALT_ROUNDS = 10;
+const { createUser, getUserByUsername } = require("../db/adapters/users");
 const { authRequired } = require("./utils");
 
 //POST /api/auth/register
@@ -73,6 +69,7 @@ authRouter.post("/login", async (req, res, next) => {
         res.send({
           success: true,
           message: "You're logged in!",
+          user: user,
         });
       } else {
         next({
@@ -104,7 +101,7 @@ authRouter.get("/logout", async (req, res, next) => {
   }
 });
 
-// GET api/users/me
+// GET api/auth/me
 authRouter.get("/me", authRequired, (req, res, next) => {
   res.send(req.user);
 });

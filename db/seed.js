@@ -53,7 +53,6 @@ async function dropTables() {
   }
 }
 
-
 async function createTables() {
   // Define your tables and fields
   try {

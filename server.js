@@ -3,6 +3,7 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const { authRequired } = require("./routes/utils");
 const PORT = 3000;
 
 const app = express();
@@ -19,6 +20,10 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 // Routes
 app.use("/api", require("./routes"));
 
+app.get("/test", authRequired, (req, res, next) => {
+  res.send("You are authorized");
+});
+
 // Error Handler
 app.use((err, req, res, next) => {
   res.send({
@@ -27,9 +32,6 @@ app.use((err, req, res, next) => {
     stack: err.stack,
   });
 });
-
-const router = require("./routes");
-app.use("/api", router);
 
 // Sereve App
 app.listen(PORT, () => {

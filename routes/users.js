@@ -6,7 +6,7 @@ const { getAllRoutinesByUser } = require("../db/adapters/routines");
 // Making request
 usersRouter.use((req, res, next) => {
   console.log("A request is being made to /users");
-  res.send({ message: "Users coming soon" });
+  next();
 });
 
 //GET /api/users
@@ -25,10 +25,13 @@ usersRouter.get("/:username/routines", async (req, res, next) => {
   const { username } = req.params;
   try {
     const routines = await getAllRoutinesByUser(username);
-    if (routines && routines.is_public) {
-      res.send({ routines: routines });
+    if (routines) {
+      res.send(routines);
     } else {
-      next({ name: "NoRoutinesError", message: "No Routines Found" });
+      next({
+        name: "NoRoutineError",
+        message: "No Routines Found for that user",
+      });
     }
   } catch ({ name, message }) {
     next({ name, message });
