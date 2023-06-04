@@ -9,7 +9,8 @@ async function getRoutineById(routineId) {
       `
         SELECT * 
         FROM routines
-        WHERE id=$1;
+        WHERE id=$1
+        ORDER BY id;
         `,
       [routineId]
     );
@@ -60,7 +61,8 @@ async function getRoutinesWithoutActivities() {
     const { rows: routines } = await client.query(
       `
         SELECT *
-        FROM routines;
+        FROM routines
+        ORDER BY id;
         `
     );
 

@@ -13,9 +13,12 @@ authRouter.post("/register", async (req, res, next) => {
     //Check if user already exists
     const _user = await getUserByUsername(username);
     if (_user) {
-      next({
-        message: "That user already exists!",
-        name: "Auth Error",
+      res.send({
+        success: false,
+        error: {
+          message: "That user already exists!",
+          name: "Auth Error",
+        },
       });
       return;
     }
@@ -31,7 +34,11 @@ authRouter.post("/register", async (req, res, next) => {
       signed: true,
     });
 
-    res.send(user);
+    res.send({
+      success: true,
+      message: "Thank You for signing up!",
+      user: user,
+    });
   } catch (error) {
     next(error);
   }
@@ -42,9 +49,12 @@ authRouter.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    next({
-      name: "MissingCredentialsError",
-      message: "Please supply both a username and password",
+    res.send({
+      success: false,
+      error: {
+        name: "MissingCredentialsError",
+        message: "Please supply both a username and password",
+      },
     });
   }
 
@@ -72,13 +82,15 @@ authRouter.post("/login", async (req, res, next) => {
           user: user,
         });
       } else {
-        next({
-          name: "IncorrectCredentialsError",
-          message: "username or password is incorrect",
+        res.send({
+          success: false,
+          error: {
+            name: "IncorrectCredentialsError",
+            message: "username or password is incorrect",
+          },
         });
       }
     });
-    console.log(user);
   } catch (error) {
     next(error);
   }

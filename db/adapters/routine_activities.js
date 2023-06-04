@@ -142,7 +142,8 @@ async function getRoutineActivitiesByRoutine(routineId) {
     } = await client.query(
       `
         SELECT * FROM routine_activities
-        WHERE routine_activities.routine_id = $1;
+        WHERE routine_activities.routine_id = $1
+        ORDER BY id;
     `,
       [routineId]
     );
