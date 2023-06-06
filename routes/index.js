@@ -5,7 +5,9 @@ const jwt = require("jsonwebtoken");
 
 router.get("/health", (req, res, next) => {
   try {
-    res.send("API is Healthy 😎!");
+    res.send({ 
+      message: "API is Healthy 😎!",
+    });
   } catch (error) {
     next(error);
   }
