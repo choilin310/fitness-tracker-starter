@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "start:dev": "nodemon server.js",
+    "start:dev": "(npm run dev --prefix client) & nodemon server.js",
     "seed": "node db/seed.js",
-    "seed:dev": "nodemon db/seed.js"
+    "seed:dev": "nodemon db/seed.js",
+    "build": "npm install --prefix client && npm run build --prefix client"
   },
   "author": "",
   "license": "ISC",

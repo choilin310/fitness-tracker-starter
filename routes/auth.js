@@ -38,6 +38,7 @@ authRouter.post("/register", async (req, res, next) => {
       success: true,
       message: "Thank You for signing up!",
       user: user,
+      token: token,
     });
   } catch (error) {
     next(error);
@@ -80,6 +81,7 @@ authRouter.post("/login", async (req, res, next) => {
           success: true,
           message: "You're logged in!",
           user: user,
+          token: token,
         });
       } else {
         res.send({
