@@ -1,11 +1,12 @@
 const usersRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
 const { getAllUsers } = require("../db/adapters/users");
+const { getAllRoutinesByUser } = require("../db/adapters/routines");
 
 // Making request
 usersRouter.use((req, res, next) => {
   console.log("A request is being made to /users");
-  res.send({ message: "Users coming soon" });
+  next();
 });
 
 //GET /api/users
@@ -18,25 +19,23 @@ usersRouter.get("/", async (req, res, next) => {
   }
 });
 
-/*usersRouter.post("/register", async (req, res, next) => {
-  const { username, password } = req.body;
-
+//GET /api/users/:username/routines
+// get a list of public routines for a particular user
+usersRouter.get("/:username/routines", async (req, res, next) => {
+  const { username } = req.params;
   try {
-    const _user = await getUserByUsername(username);
-
-    if (_user) {
+    const routines = await getAllRoutinesByUser(username);
+    if (routines) {
+      res.send(routines);
+    } else {
       next({
-        name: "UsernameAlreadyExistsError",
-        message: "A user by that username already exists",
+        name: "NoRoutineError",
+        message: "No Routines Found for that user",
       });
     }
-    const user = await createUser({
-      username,
-      password,
-    });
-  } catch (error) {
-    throw error;
+  } catch ({ name, message }) {
+    next({ name, message });
   }
-});*/
+});
 
 module.exports = usersRouter;

@@ -1,15 +1,11 @@
 const authRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
-const SALT_ROUNDS = 10;
 const bcrypt = require("bcrypt");
-const {
-  createUser,
-  getUserByUsername,
-  getUser,
-} = require("../db/adapters/users");
+const SALT_ROUNDS = 10;
+const { createUser, getUserByUsername } = require("../db/adapters/users");
+const { authRequired } = require("./utils");
 
 //POST /api/auth/register
-
 authRouter.post("/register", async (req, res, next) => {
   try {
     const { username, password } = req.body;
@@ -17,9 +13,12 @@ authRouter.post("/register", async (req, res, next) => {
     //Check if user already exists
     const _user = await getUserByUsername(username);
     if (_user) {
-      next({
-        message: "That user already exists!",
-        name: "Auth Error",
+      res.send({
+        success: false,
+        error: {
+          message: "That user already exists!",
+          name: "Auth Error",
+        },
       });
       return;
     }
@@ -35,19 +34,28 @@ authRouter.post("/register", async (req, res, next) => {
       signed: true,
     });
 
-    res.send(user);
+    res.send({
+      success: true,
+      message: "Thank You for signing up!",
+      user: user,
+      token: token,
+    });
   } catch (error) {
     next(error);
   }
 });
 
+// POST api/auth/login
 authRouter.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    next({
-      name: "MissingCredentialsError",
-      message: "Please supply both a username and password",
+    res.send({
+      success: false,
+      error: {
+        name: "MissingCredentialsError",
+        message: "Please supply both a username and password",
+      },
     });
   }
 
@@ -61,23 +69,36 @@ authRouter.post("/login", async (req, res, next) => {
       if (result) {
         console.log("password correct");
 
+        const token = jwt.sign(user, process.env.JWT_SECRET);
+
+        res.cookie("token", token, {
+          sameSite: "strict",
+          httpOnly: true,
+          signed: true,
+        });
+
         res.send({
           success: true,
           message: "You're logged in!",
+          user: user,
+          token: token,
         });
       } else {
-        next({
-          name: "IncorrectCredentialsError",
-          message: "username or password is incorrect",
+        res.send({
+          success: false,
+          error: {
+            name: "IncorrectCredentialsError",
+            message: "username or password is incorrect",
+          },
         });
       }
     });
-    console.log(user);
   } catch (error) {
     next(error);
   }
 });
 
+// GET api/auth/logout
 authRouter.get("/logout", async (req, res, next) => {
   try {
     res.clearCookie("token", {
@@ -92,6 +113,11 @@ authRouter.get("/logout", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+// GET api/auth/me
+authRouter.get("/me", authRequired, (req, res, next) => {
+  res.send(req.user);
 });
 
 module.exports = authRouter;
