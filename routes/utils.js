@@ -12,15 +12,13 @@ function requireUser(req, res, next) {
 
 const authRequired = (req, res, next) => {
   try {
-    const token = req.signedcookies.token;
+    const token = req.signedCookies.token;
+    console.log("Token: ", token);
     req.user = jwt.verify(token, process.env.JWT_SECRET);
-    res.status(401).send({
-      loggedIn: "logged in",
-      message: "message",
-    });
   } catch (error) {
     return next();
   }
+  next();
 };
 
 module.exports = { requireUser, authRequired };

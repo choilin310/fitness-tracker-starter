@@ -8,6 +8,7 @@ async function getActivityById(activityId) {
       rows: [activity],
     } = await client.query(`
         SELECT * from activities WHERE id=${activityId}
+        ORDER BY id;
         `);
     if (!activity) {
       return null;
@@ -25,7 +26,8 @@ async function getAllActivities() {
   try {
     const { rows } = await client.query(`
         SELECT id, name, description
-        FROM activities;
+        FROM activities
+        ORDER BY id;
       `);
 
     return rows;
