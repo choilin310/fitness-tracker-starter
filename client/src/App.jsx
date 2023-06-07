@@ -1,9 +1,11 @@
 import { useState, useEffect} from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import useAuth from "./hooks/useAuth";
 import './App.css'
 import { Router,useNavigate,Route,Routes, Link} from 'react-router-dom'
 import Register from './components/Register'
+
 import PageContainer from './components/PageContainer'
 import Footer from './components/Footer'
 
@@ -11,6 +13,7 @@ function App() {
   const [healthMessage,setHealthMessage] = useState("");
   const [error,setError] = useState(null);
   const Navigate = useNavigate();
+  
   useEffect(()=>{
     async function checkHealth(){
       
@@ -36,6 +39,15 @@ function App() {
     <p>{healthMessage}</p>
       <div className="headingContainer">
         <h1>FITNESS TRACKER</h1>
+        {/* {user && user.username ? (
+          <div id="user">
+            {user.username.length > 10
+              ? `Hi, ${user.username.substring(0, 8)}..`
+              : `Hi, ${user.username}`}
+          </div>
+        ) : (
+          <div id="user">Hi, Guest!</div>
+        )} */}
         <button id="registerButton" onClick = {()=>{Navigate("/register")}}>register</button>
         <button id="signinButton" onClick = {()=>{Navigate("/login")}}>signin</button>
           <div className='nav'>

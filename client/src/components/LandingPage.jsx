@@ -5,6 +5,8 @@ export default function LandingPage() {
     <div>
       <div className="BodyContainer">
         <section id="headlinerArticle">
+          <h1>Welcome to the Fitness Tracker</h1>
+          <h3>Let`s get Pumped</h3>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam eum non
             nulla veniam, temporibus laboriosam minus ut voluptatibus, omnis
@@ -21,7 +23,6 @@ export default function LandingPage() {
           <img src="" alt="" />
         </section>
       </div>
-      
     </div>
   );
 }
