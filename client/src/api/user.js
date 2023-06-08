@@ -2,7 +2,7 @@ const TRACKER_URL = "http://localhost:3000/api/";
 
 export async function registerUser(username, password) {
   try {
-    const response = await fetch(`${TRACKER_URL}auth/register`, {
+    const response = await fetch(`api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -22,7 +22,7 @@ export async function registerUser(username, password) {
 
 export async function loginUser(username, password) {
   try {
-    const response = await fetch(`${TRACKER_URL}auth/login`, {
+    const response = await fetch(`api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -40,14 +40,23 @@ export async function loginUser(username, password) {
   }
 }
 
-export async function fetchMyData(token) {
+export async function logout() {
+  const response = await fetch(`api/auth/logout`);
+  const { success, message } = await response.json();
+  if (!success) {
+    throw {
+      message,
+    };
+  }
+  return {
+    success,
+    message,
+  };
+}
+
+export async function fetchMyData() {
   try {
-    const response = await fetch(`${TRACKER_URL}auth/me`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch("/api/auth/me");
     const result = await response.json();
     console.log("Result from fetchMyData: ", result);
     return result;
@@ -57,12 +66,11 @@ export async function fetchMyData(token) {
 }
 
 //need to check on comparing token to my token
-export async function fetchUsersRoutines(token, username) {
+export async function fetchUsersRoutines(username) {
   try {
-    const response = await fetch(`${TRACKER_URL}users/${username}/routines`, {
+    const response = await fetch(`api/users/${username}/routines`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
     });
     const result = await response.json();

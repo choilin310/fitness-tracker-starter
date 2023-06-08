@@ -14,10 +14,7 @@ export default function LogIn() {
       const result = await loginUser(myUsername, myPassword);
       console.log("result in Login Comp", result);
       result.success
-        ? (setToken(result.token),
-          alert(result.message),
-          setMyUsername(""),
-          setMyPassword(""))
+        ? (alert(result.message), setMyUsername(""), setMyPassword(""))
         : alert(result.error.message),
         setMyPassword("");
     } catch (error) {
