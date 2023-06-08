@@ -40,14 +40,11 @@ export async function loginUser(username, password) {
   }
 }
 
-export async function fetchMyData(token) {
+export async function fetchMyData() {
+  console.log("in fetch my data")
   try {
-    const response = await fetch(`${TRACKER_URL}auth/me`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(`${TRACKER_URL}auth/me`);
+    console.log("Response form fetchMyData: ", response);
     const result = await response.json();
     console.log("Result form fetchMyData: ", result);
     return result;
@@ -59,12 +56,7 @@ export async function fetchMyData(token) {
 //need to check on comparing token to my token
 export async function fetchUsersRoutines(token, username) {
   try {
-    const response = await fetch(`${TRACKER_URL}users/${username}/routines`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(`${TRACKER_URL}users/${username}/routines`);
     const result = await response.json();
     console.log("Result from fetchUsersRoutine: ", result);
     return result;

@@ -11,7 +11,7 @@ export default function PageContainer() {
       <Routes>
         <Route path="/" element={<LandingPage/>}/>
         <Route path="/register" element={<RegisterForm/>}/>
-        <Route path="/signin" element={<Login/>}/>
+        <Route path="/login" element={<Login/>}/>
       </Routes>  
     </div>
   )

@@ -1,28 +1,39 @@
 import React, { useState } from "react";
-import { loginUser } from "../api/user";
+import { loginUser} from "../api/user";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-
 export default function LogIn() {
   const [myUsername, setMyUsername] = useState("");
   const [myPassword, setMyPassword] = useState("");
+  const [error, setError] = useState(null);
 
-  const { setUser, token, setToken } = useAuth();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const { setLoggedIn, setUser} = useAuth();
 
   async function handleSubmit(event) {
     event.preventDefault();
-    try {
-      const result = await loginUser(myUsername, myPassword);
-      console.log("result in Login Comp", result);
-      result.success
-        ? (setToken(result.user.token),
-          alert(result.message),
-          setMyUsername(""),
-          setMyPassword(""))
-        : alert(result.error.message),
-        setMyPassword("");
-    } catch (error) {
-      console.log(error);
+    if (!myUsername.length || !myPassword.length) {
+      setError("You must add a valid username and password");
+      return;
     }
+    try {
+      let result;
+      if (pathname === "/register") {
+        result = await registerUser(myUsername, myPassword);
+      } else {
+        result = await loginUser(myUsername, myPassword);
+      }
+      if (result.success) {
+        setLoggedIn(true);
+        navigate("/");
+      }
+    } catch (error) {
+      setError(error.message);
+    }
+    setMyUsername("");
+    setMyPassword("");
   }
 
   function handleLogOut(event) {
@@ -34,27 +45,46 @@ export default function LogIn() {
   }
 
   return (
-    <div>
+    <div className="flex flex-col h-screen justify-center">
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          username="username"
-          placeholder="username"
-          value={myUsername}
-          onChange={(event) => setMyUsername(event.target.value)}
-        />
-        <input
-          type="text"
-          password="password"
-          placeholder="password"
-          value={myPassword}
-          onChange={(event) => setMyPassword(event.target.value)}
-        />
-        <button>Submit</button>
+        {pathname === "/register" ? (
+          <h2 className="text-2xl">Register</h2>
+        ) : (
+          <h2 className="text-2xl">Login</h2>
+        )}
+        {error && <p>{error}</p>}
+        <label>
+          Username:{" "}
+          <input
+            type="text"
+            placeholder="username"
+            name="username"
+            value={myUsername}
+            onChange={(e) =>setMyUsername(e.target.value)}
+          />
+        </label>
+
+        <label>
+          Password:{" "}
+          <input
+            type="password"
+            placeholder="password"
+            name="password"
+            value={myPassword}
+            onChange={(e) => setMyPassword(e.target.value)}
+          />
+        </label>
+        <button className="btn">Submit!</button>
       </form>
-      <form onSubmit={handleLogOut}>
-        <button>LogOut</button>
-      </form>
+      {pathname === "/register" ? (
+        <p>
+          Already have an account? <Link to="/login">Login Here</Link>
+        </p>
+      ) : (
+        <p>
+          Don't have an account? <Link to="/register">Register Here</Link>
+        </p>
+      )}
     </div>
   );
 }

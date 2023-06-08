@@ -1,10 +1,11 @@
-import { useState, useEffect} from 'react'
+import { useState, useEffect, useReducer} from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import useAuth from "./hooks/useAuth";
+import useAuth from './hooks/useAuth'
 import './App.css'
 import { Router,useNavigate,Route,Routes, Link} from 'react-router-dom'
-import Register from './components/Register'
+
+
 
 import PageContainer from './components/PageContainer'
 import Footer from './components/Footer'
@@ -13,6 +14,7 @@ function App() {
   const [healthMessage,setHealthMessage] = useState("");
   const [error,setError] = useState(null);
   const Navigate = useNavigate();
+  const {user} = useAuth();
   
   useEffect(()=>{
     async function checkHealth(){
@@ -27,7 +29,6 @@ function App() {
         setError(error)
       }
     }
-   
     checkHealth();
   },[])
 
@@ -35,7 +36,7 @@ function App() {
 
     return(
       <div>
-      <p>hello there</p>
+      <p>hello there  </p>
     <p>{healthMessage}</p>
       <div className="headingContainer">
         <h1>FITNESS TRACKER</h1>

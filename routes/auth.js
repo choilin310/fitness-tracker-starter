@@ -5,6 +5,7 @@ const SALT_ROUNDS = 10;
 const { createUser, getUserByUsername } = require("../db/adapters/users");
 const { authRequired } = require("./utils");
 
+
 //POST /api/auth/register
 authRouter.post("/register", async (req, res, next) => {
   try {
@@ -79,9 +80,8 @@ authRouter.post("/login", async (req, res, next) => {
 
         res.send({
           success: true,
-          message: "You're logged in!",
-          user: user,
-          token: token,
+          message: "Registration Sucessful!",
+          data: user,
         });
       } else {
         res.send({
@@ -117,7 +117,7 @@ authRouter.get("/logout", async (req, res, next) => {
 
 // GET api/auth/me
 authRouter.get("/me", authRequired, (req, res, next) => {
-  res.send(req.user);
+  res.send({ success: true, message: "you are authorized", user: req.user });
 });
 
 module.exports = authRouter;
