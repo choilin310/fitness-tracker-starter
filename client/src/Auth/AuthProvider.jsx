@@ -4,10 +4,10 @@ import { fetchMyData } from "../api/user";
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({ id: null, username: "Guest" });
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  useEffect(() => {
+  /*useEffect(() => {
     async function getMe() {
       const response = await fetchMyData(token);
       console.log("register response: ", response);
@@ -16,13 +16,27 @@ const AuthProvider = ({ children }) => {
     if (token) {
       getMe();
     }
-  }, [token]);
+  }, [token]);*/
+
+  useEffect(() => {
+    async function getMe() {
+      try {
+        const { user } = await fetchMyData();
+        setUser(user);
+        setLoggedIn(true);
+      } catch (error) {
+        setUser({ username: "Guest" });
+        setLoggedIn(false);
+      }
+    }
+    getMe();
+  }, [loggedIn]);
 
   const contextValue = {
-    token,
-    setToken,
     user,
     setUser,
+    loggedIn,
+    setLoggedIn,
   };
 
   return (

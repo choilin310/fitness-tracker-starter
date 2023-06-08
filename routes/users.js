@@ -13,7 +13,10 @@ usersRouter.use((req, res, next) => {
 usersRouter.get("/", async (req, res, next) => {
   try {
     const users = await getAllUsers();
-    res.send(users);
+    res.send({
+      success: true,
+      users: users,
+    });
   } catch (error) {
     next(error);
   }

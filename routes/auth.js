@@ -38,7 +38,6 @@ authRouter.post("/register", async (req, res, next) => {
       success: true,
       message: "Thank You for signing up!",
       user: user,
-      token: token,
     });
   } catch (error) {
     next(error);
@@ -61,6 +60,15 @@ authRouter.post("/login", async (req, res, next) => {
 
   try {
     const user = await getUserByUsername(username);
+    if (!user) {
+      res.status(401);
+      next({
+        success: false,
+        message: "There is no user with that username!",
+        name: "Auth Error",
+      });
+      return;
+    }
     bcrypt.compare(password, user.password, function (err, result) {
       if (err) {
         console.error(err);
@@ -69,6 +77,7 @@ authRouter.post("/login", async (req, res, next) => {
       if (result) {
         console.log("password correct");
 
+        delete user.password;
         const token = jwt.sign(user, process.env.JWT_SECRET);
 
         res.cookie("token", token, {
@@ -81,7 +90,6 @@ authRouter.post("/login", async (req, res, next) => {
           success: true,
           message: "You're logged in!",
           user: user,
-          token: token,
         });
       } else {
         res.send({
@@ -107,7 +115,7 @@ authRouter.get("/logout", async (req, res, next) => {
       signed: true,
     });
     res.send({
-      loggedIn: false,
+      success: true,
       message: "Logged Out!",
     });
   } catch (error) {
@@ -117,7 +125,11 @@ authRouter.get("/logout", async (req, res, next) => {
 
 // GET api/auth/me
 authRouter.get("/me", authRequired, (req, res, next) => {
-  res.send(req.user);
+  res.send({
+    success: true,
+    message: "you are authorized",
+    user: req.user,
+  });
 });
 
 module.exports = authRouter;
