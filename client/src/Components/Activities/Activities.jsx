@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import useAuth from "../hooks/useAuth";
-import { getActivities } from "../api/activities";
+import useAuth from "../../hooks/useAuth";
+import { getActivities } from "../../api/activities";
 import { useNavigate } from "react-router-dom";
 
 export default function Activities() {

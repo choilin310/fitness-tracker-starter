@@ -168,6 +168,40 @@ async function getAllRoutinesByUser(username) {
   }
 }
 
+async function getAllRoutinesByUserId(id) {
+  try {
+    const { rows: routines } = await client.query(
+      `
+            SELECT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, 
+            CASE WHEN ract."routine_id" IS NULL THEN '[]'::json
+            ELSE
+            JSON_AGG(
+              JSON_BUILD_OBJECT (
+                'id', acts.id,
+                'name', acts.name,
+                'description', acts.description,
+                'duration', ract.duration,
+                'count', ract.count
+              )
+            ) END AS activities
+            FROM routines rts
+            FULL OUTER JOIN routine_activities ract
+              ON rts.id = ract."routine_id"
+            FULL OUTER JOIN activities acts
+              ON ract."activity_id" = acts.id
+            JOIN users us
+                ON us.id = rts."creator_id"
+            WHERE us.id = $1
+            GROUP BY rts.id, ract."routine_id"
+      `,
+      [id]
+    );
+    return routines;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getPublicRoutinesByActivity(activityId) {
   try {
     const { rows: routines } = await client.query(
@@ -268,6 +302,7 @@ module.exports = {
   getRoutineById,
   getAllRoutines,
   getRoutinesWithoutActivities,
+  getAllRoutinesByUserId,
   getAllPublicRoutines,
   getAllRoutinesByUser,
   getPublicRoutinesByActivity,

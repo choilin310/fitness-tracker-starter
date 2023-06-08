@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { registerUser, loginUser } from "../api/user";
+import { registerUser, loginUser } from "../../api/user";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 
 export default function AuthForm() {
   const { pathname } = useLocation();

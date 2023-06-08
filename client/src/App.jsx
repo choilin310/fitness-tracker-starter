@@ -5,8 +5,12 @@ import { Routes, Route, Link } from "react-router-dom";
 import Home from "./Components/Home";
 import LogIn from "./Components/Login";
 import RegisterForm from "./Components/RegisterForm";
-import Activities from "./Components/Activities";
-import Routines from "./Components/Routines";
+import Activities from "./Components/Activities/Activities";
+import Routines from "./Components/Routines/Routines";
+import SelectedRoutine from "./Components/Routines/SelectedRoutine";
+import AuthForm from "./Components/Auth/AuthForm";
+import Dashboard from "./Components/Dashboard";
+import Profile from "./Components/Profile";
 
 function App() {
   const { user } = useAuth();
@@ -50,20 +54,23 @@ function App() {
         <Link to="/register" className="log">
           Register
         </Link>
-        <Link to="/routines" className="links">
-          Routines
-        </Link>
-        <Link to="/activities" className="links">
-          Activities
+        <Link to="/dashboard" className="links">
+          Dashboard
         </Link>
       </div>
       <div id="main">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/logIn/*" element={<LogIn />} />
-          <Route path="/register" element={<RegisterForm />} />
-          <Route path="/routines" element={<Routines />} />
-          <Route path="/activities" element={<Activities />} />
+          <Route path="/logIn/*" element={<AuthForm />} />
+          <Route path="/register" element={<AuthForm />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/profile" element={<Profile />} />
+          <Route path="/dashboard/activities" element={<Activities />} />
+          <Route path="/dashboard/routines" element={<Routines />} />
+          <Route
+            path="/dashboard/routines/:routineId"
+            element={<SelectedRoutine />}
+          />
         </Routes>
       </div>
     </div>

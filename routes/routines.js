@@ -1,5 +1,5 @@
 const routinesRouter = require("express").Router();
-const { requireUser } = require(`./utils`);
+const { requireUser, authRequired } = require(`./utils`);
 
 const {
   getRoutineById,
@@ -9,6 +9,7 @@ const {
   getAllRoutinesByUser,
   getPublicRoutinesByUser,
   getPublicRoutinesByActivity,
+  getAllRoutinesByUserId,
   createRoutine,
   updateRoutine,
   destroyRoutine,
@@ -33,6 +34,15 @@ routinesRouter.get("/", async (req, res, next) => {
   }
 });
 
+routinesRouter.get("/myRoutines", authRequired, async (req, res, next) => {
+  try {
+    const myRoutines = await getAllRoutinesByUser(req.user.username);
+    res.send({ success: true, message: "My Routines", myRoutines });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // POST /routines
 routinesRouter.post("/", requireUser, async (req, res, next) => {
   const { name, goal, activities = "" } = req.body;
@@ -52,7 +62,11 @@ routinesRouter.post("/", requireUser, async (req, res, next) => {
     const routine = await createRoutine(creator_id, name, goal);
 
     if (routine) {
-      res.send({ routine });
+      res.send({
+        success: true,
+        message: "Routine posted",
+        routine: routine,
+      });
     } else {
       next({
         name: `Error`,
@@ -97,7 +111,11 @@ routinesRouter.patch("/:routine_id", requireUser, async (req, res, next) => {
         goal,
         is_public
       );
-      res.send({ routine: updatedRoutine });
+      res.send({
+        success: true,
+        message: "Routine updated",
+        routine: updatedRoutine,
+      });
     } else {
       next({
         name: "UnauthorizedUserError",
@@ -117,7 +135,11 @@ routinesRouter.delete("/:routine_id", requireUser, async (req, res, next) => {
     if (routine && routine.creator_id === req.user.id) {
       const deletedRoutine = await destroyRoutine(routine_id);
 
-      res.send({ routine: deletedRoutine });
+      res.send({
+        success: true,
+        message: "message deleted",
+        routine: deletedRoutine,
+      });
     } else {
       next(
         routine
