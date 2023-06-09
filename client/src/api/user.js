@@ -41,7 +41,7 @@ export async function loginUser(username, password) {
 }
 
 export async function fetchMyData() {
-  const response = await fetch(`${TRACKER_URL}auth/me`);
+  const response = await fetch("${TRACKER_URL}auth/me");
   const { success, message, user } = await response.json();
   if (!success) {
     throw {
