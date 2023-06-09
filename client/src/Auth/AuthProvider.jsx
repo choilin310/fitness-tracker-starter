@@ -23,9 +23,7 @@ const AuthProvder = ({ children }) => {
     }
     getMe();
   }, [loggedIn]);
-  if(loggedIn){
-    const focus = loggedIn;
-  }
+  
 
   const contextValue = {
     user,

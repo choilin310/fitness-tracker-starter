@@ -13,13 +13,14 @@ function requireUser(req, res, next) {
 const authRequired = (req, res, next) => {
   try {
     const token = req.signedCookies.token;
-    console.log("authRequired Token: ", req);
+    console.log("authRequired Token:",token);
     req.user = jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
     res.status(401).send({
       success: false,
       message: "You are not authorized!!!",
     });
+    return;
   }
   next();
 };

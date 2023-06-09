@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { loginUser} from "../api/user";
+import { registerUser } from "../api/user";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
@@ -11,7 +12,7 @@ export default function LogIn() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const { setLoggedIn, setUser} = useAuth();
+  const { setLoggedIn} = useAuth();
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -28,8 +29,8 @@ export default function LogIn() {
       }
       if (result.success) {
         setLoggedIn(true);
-        setUser(result.data)
-        navigate("/");
+        
+       // navigate("/");
       }
     } catch (error) {
       setError(error.message);
