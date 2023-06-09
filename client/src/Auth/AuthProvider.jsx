@@ -4,7 +4,6 @@ import { fetchMyData } from "../api/user";
 export const AuthContext = createContext();
 
 const AuthProvder = ({ children }) => {
-  console.log("in auth provider")
   const [user, setUser] = useState({ id: null, username: "Guest" });
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -12,15 +11,21 @@ const AuthProvder = ({ children }) => {
     async function getMe() {
       try {
         const { user } = await fetchMyData();
+        
         setUser(user);
+        console.log("current user true", user);
         setLoggedIn(true);
       } catch (error) {
         setUser({ username: "Guest" });
+        console.log("current user false", user);
         setLoggedIn(false);
       }
     }
     getMe();
   }, [loggedIn]);
+  if(loggedIn){
+    const focus = loggedIn;
+  }
 
   const contextValue = {
     user,
@@ -29,6 +34,7 @@ const AuthProvder = ({ children }) => {
     setLoggedIn,
   };
 console.log("current user", user);
+console.log("is logged in ?", loggedIn)
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );

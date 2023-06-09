@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { loginUser} from "../api/user";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+
 export default function LogIn() {
   const [myUsername, setMyUsername] = useState("");
   const [myPassword, setMyPassword] = useState("");
@@ -27,6 +28,7 @@ export default function LogIn() {
       }
       if (result.success) {
         setLoggedIn(true);
+        setUser(result.data)
         navigate("/");
       }
     } catch (error) {
@@ -34,14 +36,6 @@ export default function LogIn() {
     }
     setMyUsername("");
     setMyPassword("");
-  }
-
-  function handleLogOut(event) {
-    event.preventDefault();
-    token
-      ? confirm("Are you sure you want to logout?") &&
-        (setToken(null), localStorage.removeItem("token"), setUser(null))
-      : alert("No users are signed in!");
   }
 
   return (

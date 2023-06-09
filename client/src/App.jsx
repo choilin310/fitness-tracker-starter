@@ -1,9 +1,10 @@
 import { useState, useEffect, useReducer} from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import useAuth from './hooks/useAuth'
+import useAuth from './hooks/useAuth';
 import './App.css'
 import { Router,useNavigate,Route,Routes, Link} from 'react-router-dom'
+import logout from './components/logout';
 
 
 
@@ -36,7 +37,7 @@ function App() {
 
     return(
       <div>
-      <p>hello there  </p>
+      <p>hello there </p>
     <p>{healthMessage}</p>
       <div className="headingContainer">
         <h1>FITNESS TRACKER</h1>
@@ -51,11 +52,12 @@ function App() {
         )} */}
         <button id="registerButton" onClick = {()=>{Navigate("/register")}}>register</button>
         <button id="signinButton" onClick = {()=>{Navigate("/login")}}>signin</button>
+        <button id="logoutButton" onClick = {()=>{logout();}}>logout</button>
           <div className='nav'>
             <ul>
               <li><Link to="/">home</Link></li>
               <li><Link to="/activities-and-routines">activities and routines</Link></li>
-              <li><Link to="/usre-roster">user roster</Link></li>
+              <li><Link to="/user-roster">user roster</Link></li>
             </ul>
           </div>               
       </div>

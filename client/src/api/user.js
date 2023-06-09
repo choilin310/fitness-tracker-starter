@@ -41,16 +41,18 @@ export async function loginUser(username, password) {
 }
 
 export async function fetchMyData() {
-  console.log("in fetch my data")
-  try {
-    const response = await fetch(`${TRACKER_URL}auth/me`);
-    console.log("Response form fetchMyData: ", response);
-    const result = await response.json();
-    console.log("Result form fetchMyData: ", result);
-    return result;
-  } catch (error) {
-    console.error(error);
+  const response = await fetch("${TRACKER_URL}auth/me");
+  const { success, message, user } = await response.json();
+  if (!success) {
+    throw {
+      message,
+    };
   }
+  return {
+    success,
+    message,
+    user,
+  };
 }
 
 //need to check on comparing token to my token

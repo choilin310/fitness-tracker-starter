@@ -63,12 +63,15 @@ authRouter.post("/login", async (req, res, next) => {
   try {
     const user = await getUserByUsername(username);
     bcrypt.compare(password, user.password, function (err, result) {
+      
       if (err) {
         console.error(err);
         return;
       }
       if (result) {
         console.log("password correct");
+        
+        delete password;
 
         const token = jwt.sign(user, process.env.JWT_SECRET);
 
@@ -77,7 +80,7 @@ authRouter.post("/login", async (req, res, next) => {
           httpOnly: true,
           signed: true,
         });
-
+        console.log("auth login user:",user)
         res.send({
           success: true,
           message: "Registration Sucessful!",
@@ -91,6 +94,7 @@ authRouter.post("/login", async (req, res, next) => {
             message: "username or password is incorrect",
           },
         });
+        
       }
     });
   } catch (error) {
