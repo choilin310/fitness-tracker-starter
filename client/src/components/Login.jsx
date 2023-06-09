@@ -28,7 +28,8 @@ export default function LogIn() {
       }
       if (result.success) {
         setLoggedIn(true);
-        // navigate("/");
+        setUser(result.data)
+        navigate("/");
       }
     } catch (error) {
       setError(error.message);

@@ -21,28 +21,27 @@ export async function registerUser(username, password) {
 }
 
 export async function loginUser(username, password) {
-  const response = await fetch(`${TRACKER_URL}auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      username,
-      password,
-    }),
-  });
-  console.log("COOKIE?",response)
-  const { success, message, data } = await response.json();
-  if (!success) {
-    throw {
-      message,
-    };
+  try {
+    const response = await fetch(`${TRACKER_URL}auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    });
+    const result = await response.json();
+    console.log("loginUser result: ", result);
+    return result;
+  } catch (error) {
+    console.error(error);
   }
-  return { success, message, data };
 }
 
 export async function fetchMyData() {
-  const response = await fetch(`http://localhost:5173/api/auth/me`);
+  const response = await fetch("${TRACKER_URL}auth/me");
   const { success, message, user } = await response.json();
   if (!success) {
     throw {
