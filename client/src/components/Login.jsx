@@ -28,8 +28,7 @@ export default function LogIn() {
       }
       if (result.success) {
         setLoggedIn(true);
-        setUser(result.data)
-        navigate("/");
+        // navigate("/");
       }
     } catch (error) {
       setError(error.message);

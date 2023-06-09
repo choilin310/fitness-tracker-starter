@@ -37,7 +37,7 @@ function App() {
 
     return(
       <div>
-      <p>hello there </p>
+      <p>hello there {user.username}</p>
     <p>{healthMessage}</p>
       <div className="headingContainer">
         <h1>FITNESS TRACKER</h1>

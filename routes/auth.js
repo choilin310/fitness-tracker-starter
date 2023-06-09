@@ -38,8 +38,8 @@ authRouter.post("/register", async (req, res, next) => {
     res.send({
       success: true,
       message: "Thank You for signing up!",
-      user: user,
-      token: token,
+      data: user,
+      
     });
   } catch (error) {
     next(error);
@@ -48,54 +48,41 @@ authRouter.post("/register", async (req, res, next) => {
 
 // POST api/auth/login
 authRouter.post("/login", async (req, res, next) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    res.send({
-      success: false,
-      error: {
-        name: "MissingCredentialsError",
-        message: "Please supply both a username and password",
-      },
-    });
-  }
-
   try {
+    const { username, password } = req.body;
+
     const user = await getUserByUsername(username);
-    bcrypt.compare(password, user.password, function (err, result) {
-      
-      if (err) {
-        console.error(err);
-        return;
-      }
-      if (result) {
-        console.log("password correct");
-        
-        delete password;
+    if (!user) {
+      res.status(401);
+      next({
+        message: "There is no user with that username!",
+        name: "Auth Error",
+      });
+      return;
+    }
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      res.status(401);
+      next({
+        message: "Your password is incorrect!",
+        name: "Auth Error",
+      });
+      return;
+    }
+    delete user.password;
 
-        const token = jwt.sign(user, process.env.JWT_SECRET);
+    const token = jwt.sign(user, process.env.JWT_SECRET);
 
-        res.cookie("token", token, {
-          sameSite: "strict",
-          httpOnly: true,
-          signed: true,
-        });
-        console.log("auth login user:",user)
-        res.send({
-          success: true,
-          message: "Registration Sucessful!",
-          data: user,
-        });
-      } else {
-        res.send({
-          success: false,
-          error: {
-            name: "IncorrectCredentialsError",
-            message: "username or password is incorrect",
-          },
-        });
-        
-      }
+    res.cookie("token", token, {
+      sameSite: "strict",
+      httpOnly: true,
+      signed: true,
+    });
+
+    res.send({
+      success: true,
+      message: "Registration Sucessful!",
+      data: user,
     });
   } catch (error) {
     next(error);
@@ -120,7 +107,8 @@ authRouter.get("/logout", async (req, res, next) => {
 });
 
 // GET api/auth/me
-authRouter.get("/me", authRequired, (req, res, next) => {
+authRouter.get("/me", authRequired,(req, res, next) => {
+   console.log("here in /me:",req);
   res.send({ success: true, message: "you are authorized", user: req.user });
 });
 

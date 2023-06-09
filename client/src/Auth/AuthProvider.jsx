@@ -21,7 +21,10 @@ const AuthProvder = ({ children }) => {
         setLoggedIn(false);
       }
     }
-    getMe();
+
+    
+     getMe();
+    
   }, [loggedIn]);
   if(loggedIn){
     const focus = loggedIn;
