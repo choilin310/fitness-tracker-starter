@@ -14,13 +14,15 @@ export default function RoutineForm() {
   const [currentRoutine, setCurrentRoutine] = useState("");
   const [rnaTrigger, setRnaTrigger] = useState(false);
   const [rnaHTML, setrnaHTML] = useState("");
-
+// Builds the routine card when user clicks create routine,activities has to build inside of it,by adding 1 at a time(wip).
   useEffect(() => {
     async function buildRoutineActivities() {
       if (currentRoutine != "") {
         console.log("in card", currentRoutine);
         const routine = await getRoutine(currentRoutine);
         console.log("routin for card:",routine)
+        
+        
         let html = (
             <div className="medium-container" id="routines-activities-card">
             RoutineActivitiesCard
@@ -40,7 +42,7 @@ export default function RoutineForm() {
     }
     buildRoutineActivities()
   },[currentRoutine])
-    
+  //functions for the buttons to trigger posting  
   async function postActivityform() {
     const response = await postActivity(activity, description);
     console.log("activities", response);
@@ -144,7 +146,7 @@ export default function RoutineForm() {
         </div>
 
         <div className="medium-container" id="activities-input-list">
-          list
+          list {/* this is where the card will build as the user inputs info(wip) */}
           {rnaHTML}
         </div>
 

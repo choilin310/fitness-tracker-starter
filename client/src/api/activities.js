@@ -1,4 +1,4 @@
-const TRACKER_URL = "http://localhost:3000/api/";
+const TRACKER_URL = "/api/";
 
 export async function getActivities() {
   try {

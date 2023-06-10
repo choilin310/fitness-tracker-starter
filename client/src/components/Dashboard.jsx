@@ -7,6 +7,8 @@ import {useNavigate} from 'react-router-dom'
 export default function Dashboard() {
     const navigate = useNavigate();
     const[routinesList,setRoutinesList] = useState("");
+    //retrieves routines and activities(wip) from the public
+
   useEffect(() => {
     async function getAllRoutines() {
       const response = await getRoutines();
@@ -33,6 +35,7 @@ export default function Dashboard() {
     getAllRoutines();
     console.log("routinelist:",routinesList)
   },[]);
+
   return (
     <div>
       <h1>Dashboard</h1>

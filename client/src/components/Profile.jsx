@@ -8,6 +8,7 @@ export default function Profile() {
         <h1>Profile</h1>
         <div className="large-container">
             <section className="medium-container">
+                {/* user info */}
             <h3>{user.username}</h3>
                 <img src="" alt="" />
             <h3>About</h3> 
@@ -20,6 +21,7 @@ export default function Profile() {
                 </ul>
             </section>
             <section className="medium-container">
+                {/* user routines */}
             <h3>Personal Workout</h3>
             <ul>
                 <li>activities</li>

@@ -9,7 +9,9 @@ import RoutineForm from './RoutineForm'
 export default function PageContainer() {
   return (
     <div>
+      {/* this is where the page content goes for the middle section*/}
       <Routes>
+        
         <Route path="/" element={<Home/>}/>
         <Route path="/register" element={<Login/>}/>
         <Route path="/login" element={<Login/>}/>
