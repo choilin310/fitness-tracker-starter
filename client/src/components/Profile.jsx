@@ -6,7 +6,7 @@ export default function Profile() {
   return (
     <div>
         <h1>Profile</h1>
-        <div className="Large-container">
+        <div className="large-container">
             <section className="medium-container">
             <h3>{user.username}</h3>
                 <img src="" alt="" />
