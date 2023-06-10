@@ -30,7 +30,7 @@ export default function LogIn() {
       if (result.success) {
         setLoggedIn(true);
         
-       // navigate("/");
+       navigate("/");
       }
     } catch (error) {
       setError(error.message);

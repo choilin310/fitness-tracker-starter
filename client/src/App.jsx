@@ -15,8 +15,9 @@ import Footer from './components/Footer'
 function App() {
   const [healthMessage,setHealthMessage] = useState("");
   const [error,setError] = useState(null);
+  const [headButtons,setHeadButtons] = useState("");
   const Navigate = useNavigate();
-  const {user} = useAuth();
+  const {user, loggedIn} = useAuth();
   
   useEffect(()=>{
     async function checkHealth(){
@@ -31,29 +32,44 @@ function App() {
         setError(error)
       }
     }
+
+    async function Buttons(loggedIn){
+      let html ="";
+      if(!loggedIn){
+        console.log("login buttons")
+        html = (<div>
+           <button id="registerButton" onClick = {()=>{Navigate("/register")}}>register</button>
+          <button id="signinButton" onClick = {()=>{Navigate("/login")}}>signin</button>
+        </div>);
+      }else{
+        console.log("logout buttons")
+        html = (<div>
+          <button id="logoutButton" onClick = {()=>{logout();}}>logout</button>
+          <button id="profileButton">profile</button>
+        </div>)
+      }
+      return(
+        setHeadButtons(html)
+      )
+    }
+    Buttons(loggedIn);
     checkHealth();
-  },[])
+  },[loggedIn])
+
+  
+
+  
 
   function HeadingOfPage(){
 
     return(
       <div>
-      <p>hello there </p>
+      <p>hello there {user.username}</p>
     <p>{healthMessage}</p>
       <div className="headingContainer">
         <h1>FITNESS TRACKER</h1>
-        {/* {user && user.username ? (
-          <div id="user">
-            {user.username.length > 10
-              ? `Hi, ${user.username.substring(0, 8)}..`
-              : `Hi, ${user.username}`}
-          </div>
-        ) : (
-          <div id="user">Hi, Guest!</div>
-        )} */}
-        <button id="registerButton" onClick = {()=>{Navigate("/register")}}>register</button>
-        <button id="signinButton" onClick = {()=>{Navigate("/login")}}>signin</button>
-        <button id="logoutButton" onClick = {()=>{logout();}}>logout</button>
+        {headButtons}
+        
           <div className='nav'>
             <ul>
               <li><Link to="/">home</Link></li>
