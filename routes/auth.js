@@ -5,6 +5,7 @@ const SALT_ROUNDS = 10;
 const { createUser, getUserByUsername } = require("../db/adapters/users");
 const { authRequired } = require("./utils");
 
+
 //POST /api/auth/register
 authRouter.post("/register", async (req, res, next) => {
   try {
@@ -70,6 +71,7 @@ authRouter.post("/login", async (req, res, next) => {
       return;
     }
     bcrypt.compare(password, user.password, function (err, result) {
+      
       if (err) {
         console.error(err);
         return;
@@ -77,7 +79,6 @@ authRouter.post("/login", async (req, res, next) => {
       if (result) {
         console.log("password correct");
 
-        delete user.password;
         const token = jwt.sign(user, process.env.JWT_SECRET);
 
         res.cookie("token", token, {
@@ -85,11 +86,11 @@ authRouter.post("/login", async (req, res, next) => {
           httpOnly: true,
           signed: true,
         });
-
+        console.log("auth login user:",user)
         res.send({
           success: true,
-          message: "You're logged in!",
-          user: user,
+          message: "Registration Sucessful!",
+          data: user,
         });
       } else {
         res.send({
@@ -99,6 +100,7 @@ authRouter.post("/login", async (req, res, next) => {
             message: "username or password is incorrect",
           },
         });
+        
       }
     });
   } catch (error) {
@@ -125,11 +127,7 @@ authRouter.get("/logout", async (req, res, next) => {
 
 // GET api/auth/me
 authRouter.get("/me", authRequired, (req, res, next) => {
-  res.send({
-    success: true,
-    message: "you are authorized",
-    user: req.user,
-  });
+  res.send({ success: true, message: "you are authorized", user: req.user });
 });
 
 module.exports = authRouter;

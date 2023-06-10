@@ -1,73 +1,99 @@
-import { useState, useEffect } from "react";
-import "./App.css";
-import useAuth from "./hooks/useAuth";
-import { Routes, Route, Link } from "react-router-dom";
-import Home from "./Components/Home";
-import LogIn from "./Components/Login";
-import RegisterForm from "./Components/RegisterForm";
-import Activities from "./Components/Activities";
-import Routines from "./Components/Routines";
+/* eslint-disable no-unused-vars */
+import { useState, useEffect} from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import useAuth from './hooks/useAuth';
+import './App.css'
+import { Router,useNavigate,Route,Routes, Link} from 'react-router-dom'
+import { logoutUser } from './api/user';
+
+
+
+import PageContainer from './components/PageContainer'
+import Footer from './components/Footer'
 
 function App() {
-  const { user } = useAuth();
-  const [healthMessage, setHealthMessage] = useState("");
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    async function checkAPIHealth() {
+  const [healthMessage,setHealthMessage] = useState("");
+  const [error,setError] = useState(null);
+  const [headButtons,setHeadButtons] = useState("");
+  const Navigate = useNavigate();
+  const {user, loggedIn, setLoggedIn} = useAuth();
+  
+  useEffect(()=>{
+    async function checkHealth(){
+      
       try {
-        const response = await fetch("/api/health");
+        
+        const response = await fetch('/api/health');
         const result = await response.json();
-        console.log(result);
+        
         setHealthMessage(result.message);
       } catch (error) {
-        setError(error);
+        setError(error)
       }
     }
-    checkAPIHealth();
-  }, []);
 
-  //{error & <p>{JSON.stringify(error, null, 2)}</p>}
-  //{healthMessage && <p>{healthMessage}</p>}
+    async function Buttons(loggedIn){
+      let html ="";
+      if(!loggedIn){
+        
+        html = (<div>
+           <button id="registerButton" onClick = {()=>{Navigate("/register")}}>register</button>
+          <button id="signinButton" onClick = {()=>{Navigate("/login")}}>signin</button>
+        </div>);
+      }else{
+        
+        html = (<div>
+           <button id="dashboardButton">dashboard</button>
+           <button id="profileButton">profile</button>
+          <button id="logoutButton" onClick = {()=>{setLoggedIn(logoutUser());}}>logout</button>
+        </div>)
+      }
+      return(
+        setHeadButtons(html)
+      )
+    }
+    Buttons(loggedIn);
+    checkHealth();
+  },[loggedIn])
+
+  
+
+  
+
+  function HeadingOfPage(){
+
+    return(
+      <div>
+      <p>hello there {user.username}</p>
+    <p>{healthMessage}</p>
+      <div className="headingContainer">
+        <h1>FITNESS TRACKER</h1>
+        {headButtons}
+        
+          <div className='nav'>
+            <ul>
+              <li><Link to="/">home</Link></li>
+              <li><Link to="/activities-and-routines">activities and routines</Link></li>
+              <li><Link to="/user-roster">user roster</Link></li>
+            </ul>
+          </div>               
+      </div>
+    </div>  
+    );
+
+  }
+  
+  
   return (
-    <div className="App">
-      <div id="header">
-        {user && user.username ? (
-          <div id="user">
-            {user.username.length > 10
-              ? `Hi, ${user.username.substring(0, 8)}..`
-              : `Hi, ${user.username}`}
-          </div>
-        ) : (
-          <div id="user">Hi, Guest!</div>
-        )}
-        <Link to="/" className="links">
-          Home
-        </Link>
-        <Link to="/logIn" className="log">
-          Log In/Out
-        </Link>
-        <Link to="/register" className="log">
-          Register
-        </Link>
-        <Link to="/routines" className="links">
-          Routines
-        </Link>
-        <Link to="/activities" className="links">
-          Activities
-        </Link>
-      </div>
-      <div id="main">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/logIn/*" element={<LogIn />} />
-          <Route path="/register" element={<RegisterForm />} />
-          <Route path="/routines" element={<Routines />} />
-          <Route path="/activities" element={<Activities />} />
-        </Routes>
-      </div>
+    <div className="app">
+    <HeadingOfPage/>
+    <PageContainer/>
+    <Footer/>
     </div>
-  );
+    
+  
+  )
 }
 
-export default App;
+export default App
