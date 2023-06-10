@@ -201,17 +201,17 @@ async function getPublicRoutinesByActivity(activityId) {
   }
 }
 
-async function createRoutine(creator_id, name, goal) {
+async function createRoutine(creator_id, name, goal, isPublic) {
   try {
     const {
       rows: [routine],
     } = await client.query(
       `
-                INSERT INTO routines("creator_id", name, goal )
-                VALUES($1, $2, $3)
+                INSERT INTO routines("creator_id", name, goal, is_public)
+                VALUES($1, $2, $3, $4)
                 RETURNING *;
                 `,
-      [creator_id, name, goal]
+      [creator_id, name, goal, isPublic]
     );
 
     return routine;

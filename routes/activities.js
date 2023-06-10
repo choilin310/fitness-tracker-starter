@@ -43,7 +43,7 @@ activitiesRouter.post("/", authRequired, async (req, res, next) => {
 });
 
 //PATCH api/activities/:activity_id
-activitiesRouter.patch("/:activity_id", requireUser, async (req, res, next) => {
+activitiesRouter.patch("/:activity_id", authRequired, async (req, res, next) => {
   const { activity_id } = req.params;
   const { name, description } = req.body;
 

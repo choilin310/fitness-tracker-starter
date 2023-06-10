@@ -1,5 +1,5 @@
 const routinesRouter = require("express").Router();
-const { requireUser } = require(`./utils`);
+const { requireUser, authRequired } = require(`./utils`);
 
 const {
   getRoutineById,
@@ -33,23 +33,31 @@ routinesRouter.get("/", async (req, res, next) => {
   }
 });
 
-// POST /routines
-routinesRouter.post("/", requireUser, async (req, res, next) => {
-  const { name, goal, activities = "" } = req.body;
-  const { creator_id } = req.user;
-
-  const actArr = activities.trim().split(/\s+/);
-  const routineData = {};
-
-  if (actArr.length) {
-    routineData.acts = actArr;
+routinesRouter.get("/:routineid", async (req, res, next) => {
+  const routineId = req.params.routineid;
+  try {
+    const { creator_id, name, goal, is_public } = await getRoutineById(routineId);
+    console.log("routes,getroutine",{ creator_id, name, goal, is_public });
+    if (!creator_id) {
+      next({
+        name: "couldNotRetrieveRoutine",
+        Message: "no creater_id",
+      });
+    }
+    res.send({ creator_id, name, goal, is_public });
+  } catch ({ name, message }) {
+    next({ name, message });
+    return;
   }
+});
+
+// POST /routines creates a routine
+routinesRouter.post("/", authRequired, async (req, res, next) => {
+  const { name, goal, is_public } = req.body;
+  const creator_id = req.user.id;
 
   try {
-    routineData.creator_id = creator_id;
-    routineData.name = name;
-    routineData.goal = goal;
-    const routine = await createRoutine(creator_id, name, goal);
+    const routine = await createRoutine(creator_id, name, goal, is_public);
 
     if (routine) {
       res.send({ routine });
@@ -58,6 +66,7 @@ routinesRouter.post("/", requireUser, async (req, res, next) => {
         name: `Error`,
         message: `No value in required field`,
       });
+      return;
     }
   } catch ({ name, message }) {
     next({ name, message });
@@ -65,7 +74,7 @@ routinesRouter.post("/", requireUser, async (req, res, next) => {
 });
 
 // PATCH /routines/:routineId
-routinesRouter.patch("/:routine_id", requireUser, async (req, res, next) => {
+routinesRouter.patch("/:routine_id", authRequired, async (req, res, next) => {
   const { routine_id } = req.params;
   const { name, goal, activities, is_public } = req.body;
 
@@ -110,7 +119,7 @@ routinesRouter.patch("/:routine_id", requireUser, async (req, res, next) => {
 });
 
 // DELETE /routines/:routine_id
-routinesRouter.delete("/:routine_id", requireUser, async (req, res, next) => {
+routinesRouter.delete("/:routine_id", authRequired, async (req, res, next) => {
   try {
     const routine = await getRoutineById(req.params.routine_id);
 

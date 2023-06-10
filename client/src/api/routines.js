@@ -27,14 +27,11 @@ export async function createRoutine(name, goal, is_public) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        routine: {
           name,
           goal,
           is_public,
-        },
       }),
     });
     const result = await response.json();
