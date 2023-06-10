@@ -12,14 +12,14 @@ activitiesRouter.use((req, res, next) => {
   next();
 });
 
-//GET /api/activities
+//GET /api/activities all activities
 activitiesRouter.get("/", async (req, res) => {
   const activities = await getAllActivities();
 
   res.send({ activities });
 });
 
-//POST /api/activities
+//POST /api/activities 
 activitiesRouter.post("/", requireUser, async (req, res, next) => {
   const { name, description } = req.body;
   const activitiesObj = {};

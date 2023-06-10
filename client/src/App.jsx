@@ -44,8 +44,8 @@ function App() {
       }else{
         
         html = (<div>
-           <button id="dashboardButton">dashboard</button>
-           <button id="profileButton">profile</button>
+           <button id="dashboardButton" onClick={()=>{Navigate("/dashboard")}}>dashboard</button>
+           <button id="profileButton" onClick={()=>{Navigate("/profile")}}>profile</button>
           <button id="logoutButton" onClick = {()=>{setLoggedIn(logoutUser());}}>logout</button>
         </div>)
       }
