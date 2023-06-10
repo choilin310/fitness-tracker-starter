@@ -4,6 +4,7 @@ import Home from './Home'
 import Login from './Login'
 import Dashboard from './Dashboard'
 import Profile from './Profile'
+import RoutineForm from './RoutineForm'
 
 export default function PageContainer() {
   return (
@@ -14,6 +15,7 @@ export default function PageContainer() {
         <Route path="/login" element={<Login/>}/>
         <Route path="/profile" element={<Profile/>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
+        <Route path="/routineform" element={<RoutineForm/>}/>
       </Routes>  
     </div>
   )

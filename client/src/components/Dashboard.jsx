@@ -2,8 +2,10 @@ import React from "react";
 import { useEffect, useState} from "react";
 import { getRoutines } from "../api/routines";
 import { fetchUserById } from "../api/user";
+import {useNavigate} from 'react-router-dom'
 
 export default function Dashboard() {
+    const navigate = useNavigate();
     const[routinesList,setRoutinesList] = useState("");
   useEffect(() => {
     async function getAllRoutines() {
@@ -34,7 +36,7 @@ export default function Dashboard() {
   return (
     <div>
       <h1>Dashboard</h1>
-      <button id="build-routine-button">build a Routine</button>
+      <button id="build-routine-button" onClick={()=>{navigate("/routineform")}}>build a Routine</button>
       <section className="large-container">
         <h3>Public Routines</h3>
         {routinesList}
