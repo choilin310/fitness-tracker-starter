@@ -39,6 +39,16 @@ export async function loginUser(username, password) {
     console.error(error);
   }
 }
+export async function logoutUser() {
+  try{
+    const response = await fetch("/api/auth/logout")
+  const {loggedIn,message} = await response.json()
+  console.log("logout result", {loggedIn,message});
+  return {loggedIn,message};
+  }catch(error){
+    console.error(error)
+  }
+}
 
 export async function fetchMyData() {
   const response = await fetch("/api/auth/me");

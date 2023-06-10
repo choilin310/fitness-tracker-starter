@@ -5,7 +5,7 @@ import viteLogo from '/vite.svg'
 import useAuth from './hooks/useAuth';
 import './App.css'
 import { Router,useNavigate,Route,Routes, Link} from 'react-router-dom'
-import logout from './components/logout';
+import { logoutUser } from './api/user';
 
 
 
@@ -17,7 +17,7 @@ function App() {
   const [error,setError] = useState(null);
   const [headButtons,setHeadButtons] = useState("");
   const Navigate = useNavigate();
-  const {user, loggedIn} = useAuth();
+  const {user, loggedIn, setLoggedIn} = useAuth();
   
   useEffect(()=>{
     async function checkHealth(){
@@ -44,7 +44,7 @@ function App() {
       }else{
         console.log("logout buttons")
         html = (<div>
-          <button id="logoutButton" onClick = {()=>{logout();}}>logout</button>
+          <button id="logoutButton" onClick = {()=>{setLoggedIn(logoutUser());}}>logout</button>
           <button id="profileButton">profile</button>
         </div>)
       }
