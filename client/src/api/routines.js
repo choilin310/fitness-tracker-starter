@@ -1,5 +1,3 @@
-const TRACKER_URL = "http://localhost:3000/api/";
-
 export async function getRoutines() {
   try {
     const response = await fetch(`/api/routines`);
@@ -32,7 +30,7 @@ export async function fetchMyRoutines() {
   }
 }
 
-export async function createRoutine(name, goal, is_public) {
+export async function createRoutine(name, goal) {
   try {
     const response = await fetch(`/api/routines`, {
       method: "POST",
@@ -40,11 +38,8 @@ export async function createRoutine(name, goal, is_public) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        routine: {
-          name,
-          goal,
-          is_public,
-        },
+        name,
+        goal,
       }),
     });
     const result = await response.json();
@@ -61,7 +56,6 @@ export async function patchRoutine(routine_id, name, goal, is_public) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         routine: {

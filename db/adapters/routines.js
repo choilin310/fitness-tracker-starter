@@ -1,6 +1,25 @@
 const client = require("../client");
 const { createActivity, getAllActivities } = require("./activities");
 
+async function createRoutine(creator_id, name, goal, is_public = true) {
+  try {
+    const {
+      rows: [routine],
+    } = await client.query(
+      `
+                INSERT INTO routines ("creator_id", name, goal, "is_public")
+                VALUES ($1, $2, $3, $4)
+                RETURNING *;
+                `,
+      [creator_id, name, goal, is_public]
+    );
+
+    return routine;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function getRoutineById(routineId) {
   try {
     const {
@@ -232,25 +251,6 @@ async function getPublicRoutinesByActivity(activityId) {
     return routines;
   } catch (error) {
     throw error;
-  }
-}
-
-async function createRoutine(creator_id, name, goal) {
-  try {
-    const {
-      rows: [routine],
-    } = await client.query(
-      `
-                INSERT INTO routines("creator_id", name, goal )
-                VALUES($1, $2, $3)
-                RETURNING *;
-                `,
-      [creator_id, name, goal]
-    );
-
-    return routine;
-  } catch (error) {
-    console.error(error);
   }
 }
 

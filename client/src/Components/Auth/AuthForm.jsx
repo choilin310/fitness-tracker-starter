@@ -21,10 +21,17 @@ export default function AuthForm() {
       } else {
         result = await loginUser(username, password);
       }
-      if (result.success) {
+      /*if (result.success) {
         setLoggedIn(true);
         navigate("/dashboard/profile");
-      }
+      }*/
+      result.success
+        ? (alert(result.message),
+          setLoggedIn(true),
+          setUsername(""),
+          setPassword(""),
+          navigate("/dashboard/profile"))
+        : alert(result.message);
     } catch (error) {
       setError(error.message);
     }

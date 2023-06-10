@@ -15,15 +15,18 @@ export default function Dashboard() {
       navigate("/");
     } else {
       async function getMyRoutines() {
-        const routines = await fetchMyRoutines();
-        console.log("my routines in dashboard: ", routines);
+        const result = await fetchMyRoutines();
+        console.log("my routines in dashboard: ", result);
+        setMyRoutines(result.routines);
       }
       getMyRoutines();
     }
   }, [loggedIn]);
 
+  // grid grid-cols-layout grid-rows-layout
+
   return (
-    <div className="grid grid-cols-layout grid-rows-layout">
+    <div className="dashboard">
       <Nav />
       <RoutinesSidebar myRoutines={myRoutines} />
       <Outlet context={{ myRoutines, setMyRoutines }} />

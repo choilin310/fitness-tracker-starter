@@ -45,28 +45,32 @@ function App() {
         ) : (
           <div id="user">Hi, Guest!</div>
         )}
-        <Link to="/" className="links">
-          Home
-        </Link>
-        <Link to="/logIn" className="log">
-          Log In/Out
-        </Link>
-        <Link to="/register" className="log">
-          Register
-        </Link>
-        <Link to="/dashboard" className="links">
-          Dashboard
-        </Link>
+        <div className="links">
+          <Link to="/" className="link">
+            Home
+          </Link>
+          <Link to="/dashboard" className="link">
+            Dashboard
+          </Link>
+        </div>
+        <div className="logs">
+          <Link to="/logIn" className="log">
+            Log In/Out
+          </Link>
+          <Link to="/register" className="log">
+            Register
+          </Link>
+        </div>
       </div>
       <div id="main">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/logIn/*" element={<AuthForm />} />
-          <Route path="/register" element={<AuthForm />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/profile" element={<Profile />} />
           <Route path="/dashboard/activities" element={<Activities />} />
           <Route path="/dashboard/routines" element={<Routines />} />
+          <Route path="/logIn/*" element={<AuthForm />} />
+          <Route path="/register" element={<AuthForm />} />
           <Route
             path="/dashboard/routines/:routineId"
             element={<SelectedRoutine />}

@@ -1,5 +1,19 @@
 const TRACKER_URL = "http://localhost:3000/api/";
 
+export async function createRoutineActivity(count, duration) {
+  try {
+    const response = await fetch(`/api/routine_activities`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function patchRoutineActivity(routineActivityId, count, duration) {
   try {
     const response = await fetch(

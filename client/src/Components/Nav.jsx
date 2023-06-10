@@ -11,9 +11,9 @@ export default function Nav() {
     setLoggedIn(!loggedIn);
     navigate("/");
   }
-
+  //col-span-2 flex flex-row justify-evenly items-center bg-slate-300"
   return (
-    <nav className="col-span-2 flex flex-row justify-evenly items-center bg-slate-300">
+    <nav className="nav">
       <Link to="/dashboard/profile">My Profile</Link>
       <Link to="/dashboard/activities">Activities</Link>
       <Link to="/dashboard/routines">Routines</Link>
