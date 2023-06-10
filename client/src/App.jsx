@@ -36,16 +36,17 @@ function App() {
     async function Buttons(loggedIn){
       let html ="";
       if(!loggedIn){
-        console.log("login buttons")
+        
         html = (<div>
            <button id="registerButton" onClick = {()=>{Navigate("/register")}}>register</button>
           <button id="signinButton" onClick = {()=>{Navigate("/login")}}>signin</button>
         </div>);
       }else{
-        console.log("logout buttons")
+        
         html = (<div>
+           <button id="dashboardButton">dashboard</button>
+           <button id="profileButton">profile</button>
           <button id="logoutButton" onClick = {()=>{setLoggedIn(logoutUser());}}>logout</button>
-          <button id="profileButton">profile</button>
         </div>)
       }
       return(
