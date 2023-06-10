@@ -17,3 +17,26 @@ sync function getAllRoutines() {
           
       })
       const list = await Promise.all(listpromise)
+
+
+      ////////////////
+      <label>
+              duration:{" "}
+              <input
+                type="number"
+                placeholder="1"
+                name="duration-time"
+                min="1"
+              />
+              minutes
+            </label>
+            <label>
+              count:{" "}
+              <input
+                type="number"
+                placeholder="1"
+                name="duration-time"
+                min="1"
+              />
+              repetitions
+            </label>

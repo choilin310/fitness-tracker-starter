@@ -15,26 +15,25 @@ export async function getActivities() {
   }
 }
 
-export async function postActivity(token, name, description) {
+export async function postActivity(name, description) {
   try {
-    const response = await fetch(`${TRACKER_URL}activities`, {
+    const response = await fetch(`/api/activities`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        activity: {
+        
           name,
           description,
-        },
+        
       }),
     });
     const result = await response.json();
     console.log("Result from postActivity: ", result);
-    if (token) {
+    
       return result;
-    }
+    
   } catch (error) {
     console.error(error);
   }

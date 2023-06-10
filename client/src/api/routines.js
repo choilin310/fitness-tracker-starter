@@ -21,7 +21,7 @@ export async function getRoutine(routine_id) {
   }
 }
 
-export async function createRoutine(token, name, goal, is_public) {
+export async function createRoutine(name, goal, is_public) {
   try {
     const response = await fetch(`/api/routines`, {
       method: "POST",

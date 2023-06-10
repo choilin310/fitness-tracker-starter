@@ -1,3 +1,4 @@
+
 const activitiesRouter = require("express").Router();
 const {
   getAllActivities,
@@ -5,7 +6,7 @@ const {
   updateActivity,
 } = require("../db/adapters/activities");
 const { getPublicRoutinesByActivityId } = require(`../db/adapters/routines`);
-const { requireUser } = require(`./utils`);
+const { requireUser, authRequired } = require(`./utils`);
 
 activitiesRouter.use((req, res, next) => {
   console.log("A request is being made to /activities");
@@ -20,14 +21,14 @@ activitiesRouter.get("/", async (req, res) => {
 });
 
 //POST /api/activities 
-activitiesRouter.post("/", requireUser, async (req, res, next) => {
+activitiesRouter.post("/", authRequired, async (req, res, next) => {
   const { name, description } = req.body;
-  const activitiesObj = {};
+  // const activitiesObj = {};
   try {
-    activitiesObj.name = name;
-    activitiesObj.description = description;
-    const post = await createActivity(activitiesObj);
-
+    // activitiesObj.name = name;
+    // activitiesObj.description = description;
+    const post = await createActivity({name, description});
+    console.log(post)
     if (post) {
       res.send({ post });
     } else {
