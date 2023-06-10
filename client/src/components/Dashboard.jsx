@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState} from "react";
 import { getRoutines } from "../api/routines";
+import { fetchUserById } from "../api/user";
 
 export default function Dashboard() {
     const[routinesList,setRoutinesList] = useState("");
@@ -9,16 +10,21 @@ export default function Dashboard() {
       const response = await getRoutines();
       console.log(response);
       const result = response.routines;
-        const list = result.map((routine)=>{
+        const listpromise = result.map( async (routine)=>{
+            const user =  await fetchUserById(routine.creator_id)
+            console.log("testing",user)
             return(
                 <div className="small-container" id="routine-card" key={routine.id}>
                 <img src="" alt="" />
+                <p>{user}</p>
                 <p>{routine.name}</p>
                 <p>{routine.goal}</p>
+                <p>Activities:{routine.activities}</p>
             </div>
             )
             
         })
+        const list = await Promise.all(listpromise)
         console.log("response.routines",list);
         setRoutinesList(list);
     }

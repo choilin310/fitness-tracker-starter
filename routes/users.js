@@ -1,6 +1,6 @@
 const usersRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
-const { getAllUsers } = require("../db/adapters/users");
+const { getAllUsers, getUserById } = require("../db/adapters/users");
 const { getAllRoutinesByUser } = require("../db/adapters/routines");
 
 // Making request
@@ -37,5 +37,23 @@ usersRouter.get("/:username/routines", async (req, res, next) => {
     next({ name, message });
   }
 });
+
+usersRouter.get("/:userid", async(req,res,next)=>{
+  const userId = req.params.userid;
+  
+  try{
+    const username = await getUserById(userId);
+    if(username){
+      res.send(username);
+    }else{
+      next({
+        name: "NoUserFound",
+        message: "no user found by that id",
+      });
+    }
+  }catch({name,message}){
+    next({name,message});
+  }
+})
 
 module.exports = usersRouter;

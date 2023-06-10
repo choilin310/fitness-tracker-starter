@@ -76,3 +76,14 @@ export async function fetchUsersRoutines(token, username) {
     console.error(error);
   }
 }
+
+export async function fetchUserById(id){
+  try{
+    const response = await fetch(`/api/users/${id}`);
+    const result = await response.json();
+    console.log("result from fetch userbyid",result.username);
+    return result.username;
+  }catch(error){
+    console.error(error);
+  }
+}
