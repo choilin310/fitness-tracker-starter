@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
+import AuthForm from "./Components/auth/AuthForm";
 import "./App.css";
 import useAuth from "./hooks/useAuth";
 import { Routes, Route, Link } from "react-router-dom";
 import Home from "./Components/Home";
-import LogIn from "./Components/Login";
-import RegisterForm from "./Components/RegisterForm";
-import Activities from "./Components/Activities";
-import Routines from "./Components/Routines";
+import Landing from "./Components/Landing";
+import Activities from "./Components/Activities/Activities";
+import Routines from "./Components/Routines/Routines";
+import SelectedRoutine from "./Components/Routines/SelectedRoutine";
+import Dashboard from "./Components/Dashboard";
+import Profile from "./Components/Profile";
 
 function App() {
   const { user } = useAuth();
@@ -41,29 +44,37 @@ function App() {
         ) : (
           <div id="user">Hi, Guest!</div>
         )}
-        <Link to="/" className="links">
-          Home
-        </Link>
-        <Link to="/logIn" className="log">
-          Log In/Out
-        </Link>
-        <Link to="/register" className="log">
-          Register
-        </Link>
-        <Link to="/routines" className="links">
-          Routines
-        </Link>
-        <Link to="/activities" className="links">
-          Activities
-        </Link>
+        <div className="links">
+          <Link to="/home" className="link">
+            Home
+          </Link>
+          <Link to="/dashboard" className="link">
+            Dashboard
+          </Link>
+        </div>
+        <div className="logs">
+          <Link to="/logIn" className="log">
+            Log In/Out
+          </Link>
+          <Link to="/register" className="log">
+            Register
+          </Link>
+        </div>
       </div>
       <div id="main">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/logIn/*" element={<LogIn />} />
-          <Route path="/register" element={<RegisterForm />} />
-          <Route path="/routines" element={<Routines />} />
-          <Route path="/activities" element={<Activities />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/profile" element={<Profile />} />
+          <Route path="/dashboard/activities" element={<Activities />} />
+          <Route path="/dashboard/routines" element={<Routines />} />
+          <Route path="/logIn/*" element={<AuthForm />} />
+          <Route path="/register" element={<AuthForm />} />
+          <Route
+            path="/dashboard/routines/:routineId"
+            element={<SelectedRoutine />}
+          />
         </Routes>
       </div>
     </div>

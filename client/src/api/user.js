@@ -2,7 +2,7 @@ const TRACKER_URL = "http://localhost:3000/api/";
 
 export async function registerUser(username, password) {
   try {
-    const response = await fetch(`api/auth/register`, {
+    const response = await fetch(`/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -22,7 +22,7 @@ export async function registerUser(username, password) {
 
 export async function loginUser(username, password) {
   try {
-    const response = await fetch(`api/auth/login`, {
+    const response = await fetch(`/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,7 +41,7 @@ export async function loginUser(username, password) {
 }
 
 export async function logout() {
-  const response = await fetch(`api/auth/logout`);
+  const response = await fetch(`/api/auth/logout`);
   const { success, message } = await response.json();
   if (!success) {
     throw {
@@ -68,7 +68,7 @@ export async function fetchMyData() {
 //need to check on comparing token to my token
 export async function fetchUsersRoutines(username) {
   try {
-    const response = await fetch(`api/users/${username}/routines`, {
+    const response = await fetch(`/api/users/${username}/routines`, {
       headers: {
         "Content-Type": "application/json",
       },
