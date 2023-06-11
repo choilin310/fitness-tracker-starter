@@ -1,4 +1,5 @@
-const {client} = require("/home/cxb94/dev/FitnessTrackerBackend/db/client.js");
+const client = require("../client");
+
 async function createUser(userObj) {
   console.log("probe 2");
   try {
@@ -78,10 +79,14 @@ async function getUserByUsername(username) {
   // select a user using the user's username. Return the user object.
   try {
     console.log("testing username string", username);
-    const {rows: [user]} = await client.query(`
-        SELECT id, username from users WHERE username=$1;`
-        ,[username]);
-    
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+        SELECT * from users WHERE username=$1;
+        `,
+      [username]
+    );
     if (!user) {
       console.log("userByUsername log;", user);
       return null;

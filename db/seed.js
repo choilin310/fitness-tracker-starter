@@ -21,6 +21,7 @@ const {
   getPublicRoutinesByActivity,
   createRoutine,
   updateRoutine,
+  destroyRoutine,
 } = require("./adapters/routines");
 const {
   createActivity,
@@ -52,7 +53,6 @@ async function dropTables() {
   }
 }
 
-
 async function createTables() {
   // Define your tables and fields
   try {
@@ -72,7 +72,7 @@ async function createTables() {
         "creator_id" INTEGER REFERENCES users(id),
         name VARCHAR(255) UNIQUE NOT NULL,
         goal TEXT NOT NULL,
-        is_public BOOLEAN DEFAULT false
+        is_public BOOLEAN DEFAULT true
       );
     `);
 
@@ -163,12 +163,22 @@ async function rebuildDb() {
 
     //Routine_Activities......
     console.log("------------Routine_Activities-------------");
+
     console.log("Get Routine_Activity By Id 1");
     const routine_activity_1 = await getRoutineActivityById(1);
     console.log("Routine_activity_1: ", routine_activity_1);
 
     //ROUTINES..
     console.log("---------------Routines-----------------");
+
+    console.log("Creating a Routine");
+    const createdRoutine = await createRoutine(
+      3,
+      "Cardio Day",
+      "Kill Me Now!!"
+    );
+    console.log("Created Routine: ", createdRoutine);
+
     console.log("Calling getRoutineById of 1");
     const routine1 = await getRoutineById(1);
     console.log("Routine 1: ", routine1);
@@ -190,16 +200,8 @@ async function rebuildDb() {
     console.log("AllUserRoutines: ", allRoutinesByUser);
 
     console.log("Calling getPublicRoutinesByActivity of 2");
-    const PublicRoutinesByActivity = await getPublicRoutinesByActivity(2);
-    console.log("Public Routines By Activity: ", PublicRoutinesByActivity);
-
-    console.log("Creating a Routine");
-    const createdRoutine = await createRoutine(
-      3,
-      "Cardio Day",
-      "Kill Me Now!!"
-    );
-    console.log("Created Routine: ", createdRoutine);
+    const PublicRoutinesByActivity2 = await getPublicRoutinesByActivity(2);
+    console.log("Public Routines By Activity: ", PublicRoutinesByActivity2);
 
     console.log("Calling Update Routine");
     const updatedRoutine = await updateRoutine(

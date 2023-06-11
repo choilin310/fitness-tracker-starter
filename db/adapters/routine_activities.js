@@ -2,7 +2,7 @@ const {client} = require("/home/cxb94/dev/FitnessTrackerBackend/db/client.js");
 
 async function getRoutineActivityById(routineActivityId) {
   try {
-    const {
+    /*const {
       rows: [routineActivity],
     } = await client.query(
       `
@@ -33,6 +33,42 @@ async function getRoutineActivityById(routineActivityId) {
         WHERE id=$1;
         `,
       [routineActivity.activity_id]
+    );*/
+
+    const {
+      rows: [routineActivity],
+    } = await client.query(
+      `
+      SELECT ract.id as id, ract."routine_id" as routine_id, ract.activity_id as activity_id, ract.duration as duration, ract.count as count,
+      CASE WHEN ract."routine_id" IS NULL THEN '[]'::json
+      ELSE
+      JSON_AGG(
+        JSON_BUILD_OBJECT (
+          'id', rts.id,
+          'creator_id', rts."creator_id",
+          'name', rts.name,
+          'goal', rts.goal,
+          'is_public', rts.is_public
+        )
+      ) END AS routine,
+      CASE WHEN ract."routine_id" IS NULL THEN '[]'::json
+      ELSE
+      JSON_AGG(
+        JSON_BUILD_OBJECT (
+          'id', acts.id,
+          'name', acts.name,
+          'description', acts.description
+        )
+      ) END AS activities
+      FROM routine_activities ract
+      FULL OUTER JOIN routines rts
+          ON rts.id = ract."routine_id"
+      FULL OUTER JOIN activities acts
+          ON acts.id = ract."activity_id"
+      WHERE ract.id = $1
+      GROUP BY ract.id, rts.id, acts.id
+      `,
+      [routineActivityId]
     );
     if (!routineActivity) {
       throw {
@@ -40,9 +76,6 @@ async function getRoutineActivityById(routineActivityId) {
         message: "Could not find a routine_activity with that id",
       };
     }
-
-    routineActivity.routine = routine;
-    routineActivity.activity = activity;
 
     return routineActivity;
   } catch (error) {
@@ -109,7 +142,8 @@ async function getRoutineActivitiesByRoutine(routineId) {
     } = await client.query(
       `
         SELECT * FROM routine_activities
-        WHERE routine_activities.routine_id = $1;
+        WHERE routine_activities.routine_id = $1
+        ORDER BY id;
     `,
       [routineId]
     );

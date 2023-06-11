@@ -1,0 +1,131 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+#root {
+  width: 100%;
+  margin: 0 auto;
+  overflow: auto;
+  height: 100vh;
+}
+
+.App {
+  width: 100%;
+  margin: 0 auto;
+  overflow: auto;
+  height: 100vh;
+}
+
+#header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 2.44rem;
+  padding: 0 1%;
+  background-color: rgb(219, 208, 208);
+  border-bottom: solid black 0.02em;
+  position: sticky;
+  top: 0px;
+  box-shadow: 0 0 12px -2px black;
+  overflow: auto;
+}
+
+#main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+  background-color: white;
+  padding: 1%;
+  flex-grow: 1;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: auto;
+  grid-row: auto;
+}
+
+nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 4.44rem;
+  padding: 0 1%;
+
+  border-bottom: solid black 0.02em;
+  position: sticky;
+  top: 0px;
+  box-shadow: 0 0 12px -2px black;
+  overflow: auto;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@media (min-width: 770px) {
+  body {
+    padding: 0 0;
+    border: 0 0;
+  }
+
+  #root {
+    width: 100%;
+    margin: 0 auto;
+    overflow: auto;
+    min-width: 320px;
+    min-height: 100vh;
+  }
+
+  #header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 4.44rem;
+    padding: 0 1%;
+    background-color: rgb(219, 208, 208);
+    border-bottom: solid black 0.02em;
+    position: sticky;
+    top: 0px;
+    box-shadow: 0 0 12px -2px black;
+    overflow: auto;
+  }
+
+  #main {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: row;
+    background-color: white;
+    padding: 1%;
+    flex-grow: 1;
+  }
+  /*
+  col-span-2 flex flex-row justify-evenly items-center bg-slate-300
+*/
+  nav {
+    columns: span -2px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    background: slate 300px;
+  }
+  /*grid grid-cols-layout grid-rows-layout*/
+  .dashboard {
+    display: grid;
+    grid-template-columns: auto;
+    grid-row: auto;
+  }
+}
