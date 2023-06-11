@@ -1,13 +1,18 @@
-import { useParams } from "react-router-dom";
-
-export default function DropDown({ myActivities }) {
+export default function DropDown({ allActivities, onChange }) {
   return (
     <div>
       <label>
-        <select>
-          {myActivities.map((activity) => {
+        <select onChange={onChange}>
+          {allActivities.map((activity) => {
             return (
-              <option key={activity.id} value={activity.id}>
+              <option
+                key={activity.id}
+                value={JSON.stringify({
+                  id: activity.id,
+                  name: activity.name,
+                  description: activity.description,
+                })}
+              >
                 {activity.name}
               </option>
             );
