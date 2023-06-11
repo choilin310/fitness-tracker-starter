@@ -62,10 +62,12 @@ authRouter.post("/login", async (req, res, next) => {
     const user = await getUserByUsername(username);
     if (!user) {
       res.status(401);
-      next({
+      res.send({
         success: false,
-        message: "There is no user with that username!",
-        name: "Auth Error",
+        error: {
+          message: "There is no user with that username!",
+          name: "Auth Error",
+        },
       });
       return;
     }
@@ -96,7 +98,7 @@ authRouter.post("/login", async (req, res, next) => {
           success: false,
           error: {
             name: "IncorrectCredentialsError",
-            message: "username or password is incorrect",
+            message: "password is incorrect",
           },
         });
       }

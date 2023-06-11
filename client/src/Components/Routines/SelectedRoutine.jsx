@@ -4,6 +4,7 @@ import { getRoutine } from "../../api/routines";
 import { getActivities } from "../../api/activities";
 import DropDown from "../Activities/DropDown";
 import useAuth from "../../hooks/useAuth";
+import AddActivties from "./AddActivities";
 
 export default function SelectedRoutine() {
   const { routineId } = useParams();
@@ -70,9 +71,7 @@ export default function SelectedRoutine() {
           </div>
         )}
       </div>
-      {routine.creator_id === user.id && (
-        <DropDown myActivities={myActivities} />
-      )}
+      {routine.creator_id === user.id && <AddActivties routine={routine} />}
     </div>
   );
 }
