@@ -6,7 +6,7 @@ import useAuth from "../../hooks/useAuth";
 export default function AuthForm() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { setLoggedIn } = useAuth();
+  const { setUser, setLoggedIn } = useAuth();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -28,10 +28,11 @@ export default function AuthForm() {
       result.success
         ? (alert(result.message),
           setLoggedIn(true),
+          setUser(result.user),
           setUsername(""),
           setPassword(""),
           navigate("/dashboard/profile"))
-        : alert(result.message);
+        : alert(result.error.message);
     } catch (error) {
       setError(error.message);
     }

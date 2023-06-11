@@ -3,12 +3,15 @@ import { useParams } from "react-router-dom";
 import { getRoutine } from "../../api/routines";
 import { getActivities } from "../../api/activities";
 import DropDown from "../Activities/DropDown";
+import useAuth from "../../hooks/useAuth";
 
 export default function SelectedRoutine() {
   const { routineId } = useParams();
   const [routine, setRoutine] = useState({});
   const [activities, setActivities] = useState([]);
   const [myActivities, setMyActivities] = useState([]);
+
+  const { user } = useAuth();
 
   useEffect(() => {
     async function getGetRoutinesById() {
@@ -67,7 +70,9 @@ export default function SelectedRoutine() {
           </div>
         )}
       </div>
-      <DropDown myActivities={myActivities} />
+      {routine.creator_id === user.id && (
+        <DropDown myActivities={myActivities} />
+      )}
     </div>
   );
 }

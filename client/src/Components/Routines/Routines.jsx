@@ -9,7 +9,8 @@ export default function Routines() {
 
   const [routines, setRoutines] = useState([]);
   const [theseRoutines, setTheseRoutines] = useState(routines);
-  const creator_id = user.id;
+
+  const [routine, setRoutine] = useState();
 
   useEffect(() => {
     async function getGetRoutines() {
@@ -19,7 +20,7 @@ export default function Routines() {
       setTheseRoutines(result.routines);
     }
     getGetRoutines();
-  }, []);
+  }, [routine]);
 
   return (
     <div id="Routines_page">
@@ -47,8 +48,7 @@ export default function Routines() {
           </div>
         )}
       </div>
-
-      <CreateRoutineForm />
+      {user && <CreateRoutineForm setRoutine={setRoutine} />}
     </div>
   );
 }

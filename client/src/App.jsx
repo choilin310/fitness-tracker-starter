@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import AuthForm from "./Components/Auth/AuthForm";
+import AuthForm from "./Components/auth/AuthForm";
 import "./App.css";
 import useAuth from "./hooks/useAuth";
 import { Routes, Route, Link } from "react-router-dom";
 import Home from "./Components/Home";
-import LogIn from "./Components/Login";
-import RegisterForm from "./Components/RegisterForm";
+import Landing from "./Components/Landing";
 import Activities from "./Components/Activities/Activities";
 import Routines from "./Components/Routines/Routines";
 import SelectedRoutine from "./Components/Routines/SelectedRoutine";
@@ -46,7 +45,7 @@ function App() {
           <div id="user">Hi, Guest!</div>
         )}
         <div className="links">
-          <Link to="/" className="link">
+          <Link to="/home" className="link">
             Home
           </Link>
           <Link to="/dashboard" className="link">
@@ -64,7 +63,8 @@ function App() {
       </div>
       <div id="main">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/profile" element={<Profile />} />
           <Route path="/dashboard/activities" element={<Activities />} />

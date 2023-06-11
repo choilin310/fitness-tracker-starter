@@ -3,11 +3,10 @@ import { useOutletContext } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { createRoutine } from "../../api/routines";
 
-export default function CreateRoutineForm() {
+export default function CreateRoutineForm({ setRoutine }) {
   const [name, setName] = useState("");
   const [goal, setGoal] = useState("");
   const [message, setMessage] = useState("");
-  const { user } = useAuth();
 
   const { myRoutines, setMyRoutines } = useState();
   async function handleSubmit(e) {
@@ -15,9 +14,10 @@ export default function CreateRoutineForm() {
     try {
       const result = await createRoutine(name, goal);
       console.log("handleSubmit result", result);
-      //result.routine.creator_id = user.id;
+
       setMessage(result.message);
       setRoutine(result.routine);
+
       setMyRoutines([...myRoutines, result.routine]);
       return result;
     } catch (error) {
