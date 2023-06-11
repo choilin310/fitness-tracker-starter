@@ -64,6 +64,20 @@ routinesRouter.post("/", authRequired, async (req, res, next) => {
   }
 });
 
+// GET /routines/:routineId
+routinesRouter.get("/:routine_id", async (req, res, next) => {
+  try {
+    const routine = await getRoutineById(req.params.routine_id);
+    res.send({
+      success: true,
+      message: "Found Routine",
+      routine,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // PATCH /routines/:routineId
 routinesRouter.patch("/:routine_id", authRequired, async (req, res, next) => {
   const { routine_id } = req.params;

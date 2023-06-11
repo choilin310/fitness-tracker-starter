@@ -10,7 +10,7 @@ export default function createActivity() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const result = await createActivity(name, description);
+      const result = await postActivity(name, description);
       console.log(result);
       setMessage(result.message);
       setActivities(result);

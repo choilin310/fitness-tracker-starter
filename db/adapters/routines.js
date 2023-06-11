@@ -26,11 +26,28 @@ async function getRoutineById(routineId) {
       rows: [routine],
     } = await client.query(
       `
-        SELECT * 
-        FROM routines
-        WHERE id=$1
-        ORDER BY id;
-        `,
+            SELECT rts.id, rts."creator_id", rts.name, rts.goal, rts.is_public, 
+            CASE WHEN ract."routine_id" IS NULL THEN '[]'::json
+            ELSE
+            JSON_AGG(
+              JSON_BUILD_OBJECT (
+                'id', acts.id,
+                'name', acts.name,
+                'description', acts.description,
+                'duration', ract.duration,
+                'count', ract.count
+              )
+            ) END AS activities
+            FROM routines rts
+            FULL OUTER JOIN routine_activities ract
+              ON rts.id = ract."routine_id"
+            FULL OUTER JOIN activities acts
+              ON ract."activity_id" = acts.id
+            JOIN users us
+                ON us.id = rts."creator_id"
+            WHERE rts.id = $1
+            GROUP BY rts.id, ract."routine_id"
+      `,
       [routineId]
     );
 
@@ -52,21 +69,6 @@ async function getRoutineById(routineId) {
       [routine.creator_id]
     );
 
-    const { rows: activities } = await client.query(
-      `
-        SELECT acts.name
-        FROM activities acts
-        WHERE acts.id IN (
-            SELECT ract."activity_id"
-            FROM routine_activities ract
-            WHERE ract."routine_id" = $1
-        )
-        ORDER BY acts.id;
-        `,
-      [routineId]
-    );
-
-    routine.activities = activities;
     routine.creator = creator;
 
     return routine;

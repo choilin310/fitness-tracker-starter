@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import AuthForm from "./Components/Auth/AuthForm";
 import "./App.css";
 import useAuth from "./hooks/useAuth";
 import { Routes, Route, Link } from "react-router-dom";
@@ -8,7 +9,6 @@ import RegisterForm from "./Components/RegisterForm";
 import Activities from "./Components/Activities/Activities";
 import Routines from "./Components/Routines/Routines";
 import SelectedRoutine from "./Components/Routines/SelectedRoutine";
-import AuthForm from "./Components/Auth/AuthForm";
 import Dashboard from "./Components/Dashboard";
 import Profile from "./Components/Profile";
 

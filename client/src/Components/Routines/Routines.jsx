@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { getRoutines } from "../../api/routines";
 import CreateRoutineForm from "./CreateRoutineForm";
 import useAuth from "../../hooks/useAuth";
@@ -29,7 +30,30 @@ export default function Routines() {
             {theseRoutines.map(
               (routine) => {
                 return (
-                  <div className="routine" key={routine.id}>
+                  <Link
+                    key={routine.id}
+                    to={`/dashboard/routines/${routine.id}`}
+                  >
+                    <li>{routine.name}</li>
+                  </Link>
+                );
+              },
+              [theseRoutines]
+            )}
+          </section>
+        ) : (
+          <div className="message">
+            <h4>No Routines</h4>
+          </div>
+        )}
+      </div>
+
+      <CreateRoutineForm />
+    </div>
+  );
+}
+
+/*               <div className="routine" key={routine.id}>
                     <h4>Routine: {routine.name}</h4>
 
                     <span className="goal">Goal: {routine.goal}</span>
@@ -51,19 +75,5 @@ export default function Routines() {
                       )}
                     </section>
                   </div>
-                );
-              },
-              [theseRoutines]
-            )}
-          </section>
-        ) : (
-          <div className="message">
-            <h4>No Routines</h4>
-          </div>
-        )}
-      </div>
-
-      <CreateRoutineForm creator_id={creator_id} />
-    </div>
-  );
-}
+                  
+                  */

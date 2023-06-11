@@ -8,7 +8,7 @@ export async function getActivities() {
       },
     });
     const result = await response.json();
-    console.log("Result from getActivities: ", result);
+
     return result;
   } catch (error) {
     console.error(error);

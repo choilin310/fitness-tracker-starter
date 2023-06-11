@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import useAuth from "../../hooks/useAuth";
 
 export default function RoutinesSidebar({ myRoutines }) {
   return (

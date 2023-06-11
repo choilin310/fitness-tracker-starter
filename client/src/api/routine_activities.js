@@ -6,6 +6,10 @@ export async function createRoutineActivity(count, duration) {
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        count,
+        duration,
+      }),
     });
     const result = await response.json();
     return result;

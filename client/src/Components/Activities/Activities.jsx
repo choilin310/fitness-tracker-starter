@@ -19,7 +19,30 @@ export default function Activities() {
 
   return (
     <div id="activities_page">
-      <div id="activities"></div>
+      <div id="activities">
+        {theseActivities.length ? (
+          <section className="activities">
+            <h3>All Activities</h3>
+            {theseActivities.map(
+              (activity) => {
+                return (
+                  <div className="activity" key={activity.id}>
+                    <h4>Activity: {activity.name}</h4>
+                    <span className="description">
+                      Description: {activity.description}
+                    </span>
+                  </div>
+                );
+              },
+              [theseActivities]
+            )}
+          </section>
+        ) : (
+          <div className="message">
+            <h4>No Activities Here!</h4>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
