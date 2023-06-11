@@ -1,5 +1,5 @@
 const routinesRouter = require("express").Router();
-const { requireUser } = require(`./utils`);
+const { requireUser, authRequired } = require(`./utils`);
 
 const {
   getRoutineById,
@@ -9,6 +9,7 @@ const {
   getAllRoutinesByUser,
   getPublicRoutinesByUser,
   getPublicRoutinesByActivity,
+  getAllRoutinesByUserId,
   createRoutine,
   updateRoutine,
   destroyRoutine,
@@ -22,50 +23,63 @@ routinesRouter.use((req, res, next) => {
 // GET /routines
 routinesRouter.get("/", async (req, res, next) => {
   try {
-    const allRoutines = await getAllRoutines();
+    const routines = await getAllPublicRoutines();
 
-    const routines = allRoutines.filter((routine) => {
-      return routine.is_public;
-    });
     res.send({ routines });
   } catch ({ name, message }) {
     next({ name, message });
   }
 });
 
-// POST /routines
-routinesRouter.post("/", requireUser, async (req, res, next) => {
-  const { name, goal, activities = "" } = req.body;
-  const { creator_id } = req.user;
-
-  const actArr = activities.trim().split(/\s+/);
-  const routineData = {};
-
-  if (actArr.length) {
-    routineData.acts = actArr;
+routinesRouter.get("/myRoutines", authRequired, async (req, res, next) => {
+  try {
+    const routines = await getAllRoutinesByUser(req.user.username);
+    res.send({ success: true, message: "My Routines", routines });
+  } catch (error) {
+    next(error);
   }
+});
+
+// POST /routines
+routinesRouter.post("/", authRequired, async (req, res, next) => {
+  const { name, goal } = req.body;
+  const { id } = req.user;
 
   try {
-    routineData.creator_id = creator_id;
-    routineData.name = name;
-    routineData.goal = goal;
+    let creator_id = id;
+    console.log("creator_id", creator_id);
     const routine = await createRoutine(creator_id, name, goal);
 
-    if (routine) {
-      res.send({ routine });
-    } else {
-      next({
-        name: `Error`,
-        message: `No value in required field`,
-      });
-    }
-  } catch ({ name, message }) {
-    next({ name, message });
+    res.send({
+      success: true,
+      message: "Routine posted",
+      routine: {
+        creator_id: routine.creator_id,
+        name: routine.name,
+        goal: routine.goal,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET /routines/:routineId
+routinesRouter.get("/:routine_id", async (req, res, next) => {
+  try {
+    const routine = await getRoutineById(req.params.routine_id);
+    res.send({
+      success: true,
+      message: "Found Routine",
+      routine,
+    });
+  } catch (error) {
+    next(error);
   }
 });
 
 // PATCH /routines/:routineId
-routinesRouter.patch("/:routine_id", requireUser, async (req, res, next) => {
+routinesRouter.patch("/:routine_id", authRequired, async (req, res, next) => {
   const { routine_id } = req.params;
   const { name, goal, activities, is_public } = req.body;
 
@@ -97,7 +111,11 @@ routinesRouter.patch("/:routine_id", requireUser, async (req, res, next) => {
         goal,
         is_public
       );
-      res.send({ routine: updatedRoutine });
+      res.send({
+        success: true,
+        message: "Routine updated",
+        routine: updatedRoutine,
+      });
     } else {
       next({
         name: "UnauthorizedUserError",
@@ -110,14 +128,18 @@ routinesRouter.patch("/:routine_id", requireUser, async (req, res, next) => {
 });
 
 // DELETE /routines/:routine_id
-routinesRouter.delete("/:routine_id", requireUser, async (req, res, next) => {
+routinesRouter.delete("/:routine_id", authRequired, async (req, res, next) => {
   try {
     const routine = await getRoutineById(req.params.routine_id);
 
     if (routine && routine.creator_id === req.user.id) {
       const deletedRoutine = await destroyRoutine(routine_id);
 
-      res.send({ routine: deletedRoutine });
+      res.send({
+        success: true,
+        message: "message deleted",
+        routine: deletedRoutine,
+      });
     } else {
       next(
         routine

@@ -15,7 +15,7 @@ export default function LogIn() {
       console.log("result in Login Comp", result);
       result.success
         ? (alert(result.message), setMyUsername(""), setMyPassword(""))
-        : alert(result.error.message),
+        : alert(result.message),
         setMyPassword("");
     } catch (error) {
       console.log(error);

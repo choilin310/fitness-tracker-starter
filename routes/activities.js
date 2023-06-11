@@ -16,7 +16,11 @@ activitiesRouter.use((req, res, next) => {
 activitiesRouter.get("/", async (req, res) => {
   const activities = await getAllActivities();
 
-  res.send({ activities });
+  res.send({
+    success: true,
+    message: "Got Activities",
+    activities,
+  });
 });
 
 //POST /api/activities
@@ -26,10 +30,14 @@ activitiesRouter.post("/", requireUser, async (req, res, next) => {
   try {
     activitiesObj.name = name;
     activitiesObj.description = description;
-    const post = await createActivity(activitiesObj);
+    const activity = await createActivity(activitiesObj);
 
-    if (post) {
-      res.send({ post });
+    if (activity) {
+      res.send({
+        success: true,
+        message: "Activity created",
+        activity,
+      });
     } else {
       next({
         name: "Error",

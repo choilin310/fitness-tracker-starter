@@ -50,9 +50,9 @@ export async function logoutUser() {
   }
 }
 
-export async function fetchMyData() {
-  const response = await fetch("/api/auth/me");
-  const { success, message, user } = await response.json();
+export async function logout() {
+  const response = await fetch(`/api/auth/logout`);
+  const { success, message } = await response.json();
   if (!success) {
     throw {
       message,
@@ -68,7 +68,11 @@ export async function fetchMyData() {
 //need to check on comparing token to my token
 export async function fetchUsersRoutines(token, username) {
   try {
-    const response = await fetch(`/api/users/${username}/routines`);
+    const response = await fetch(`/api/users/${username}/routines`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     const result = await response.json();
     console.log("Result from fetchUsersRoutine: ", result);
     return result;

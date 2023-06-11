@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { registerUser, loginUser } from "../api/user";
+import { registerUser, loginUser } from "../../api/user";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 
 export default function AuthForm() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { setLoggedIn } = useAuth();
+  const { setUser, setLoggedIn } = useAuth();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -21,10 +21,18 @@ export default function AuthForm() {
       } else {
         result = await loginUser(username, password);
       }
-      if (result.success) {
+      /*if (result.success) {
         setLoggedIn(true);
         navigate("/dashboard/profile");
-      }
+      }*/
+      result.success
+        ? (alert(result.message),
+          setLoggedIn(true),
+          setUser(result.user),
+          setUsername(""),
+          setPassword(""),
+          navigate("/dashboard/profile"))
+        : alert(result.error.message);
     } catch (error) {
       setError(error.message);
     }
